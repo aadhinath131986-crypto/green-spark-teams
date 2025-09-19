@@ -3,15 +3,32 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import { Leaf, Users, Trophy, Camera, Star, Recycle, TreePine, Heart } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Leaf, Users, Trophy, Camera, Star, Recycle, TreePine, Heart, User } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { AuthModal } from "@/components/AuthModal";
+import { UserProfile } from "@/components/UserProfile";
+import { ActivitySubmission } from "@/components/ActivitySubmission";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/hero-image.jpg";
 import ecoIcon from "@/assets/eco-icon.jpg";
 import leaderboardImage from "@/assets/leaderboard-image.jpg";
 
 const Index = () => {
+  const { user, loading: authLoading } = useAuth();
+  const { toast } = useToast();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [userProfileOpen, setUserProfileOpen] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<any>(null);
+  const [activityModalOpen, setActivityModalOpen] = useState(false);
+  const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
+  const [userProfile, setUserProfile] = useState<any>(null);
+
   const weeklyActivities = [
     {
-      id: 1,
+      id: "recycle-bottles",
       title: "Bottle Recycling Challenge",
       description: "Collect and recycle plastic bottles in your neighborhood",
       points: 5,
@@ -20,7 +37,7 @@ const Index = () => {
       timeLeft: "3 days left"
     },
     {
-      id: 2,
+      id: "plant-trees",
       title: "Community Tree Planting",
       description: "Plant native trees in designated community areas",
       points: 15,
@@ -29,7 +46,7 @@ const Index = () => {
       timeLeft: "5 days left"
     },
     {
-      id: 3,
+      id: "park-cleanup",
       title: "Park Cleanup Drive",
       description: "Help clean local parks and public spaces",
       points: 10,
@@ -39,13 +56,106 @@ const Index = () => {
     }
   ];
 
-  const leaderboardData = [
+  // Fetch leaderboard data
+  useEffect(() => {
+    fetchLeaderboard();
+  }, []);
+
+  // Fetch user profile when authenticated
+  useEffect(() => {
+    if (user) {
+      fetchUserProfile();
+    }
+  }, [user]);
+
+  const fetchLeaderboard = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('username, points, team_name, avatar_url')
+        .order('points', { ascending: false })
+        .limit(5);
+
+      if (data) {
+        const formattedData = data.map((profile, index) => ({
+          rank: index + 1,
+          name: profile.team_name || profile.username,
+          points: profile.points,
+          avatar: profile.avatar_url || "/api/placeholder/32/32"
+        }));
+        setLeaderboardData(formattedData);
+      }
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (data) {
+        setUserProfile(data);
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
+  const handleJoinCommunity = () => {
+    if (user) {
+      setUserProfileOpen(true);
+    } else {
+      setAuthModalOpen(true);
+    }
+  };
+
+  const handleStartJourney = () => {
+    if (user) {
+      // Scroll to activities section
+      document.getElementById('activities')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      setAuthModalOpen(true);
+    }
+  };
+
+  const handleJoinChallenge = (activity: any) => {
+    if (user) {
+      setSelectedActivity(activity);
+      setActivityModalOpen(true);
+    } else {
+      setAuthModalOpen(true);
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to join challenges and earn points!",
+      });
+    }
+  };
+
+  const handleActivitySuccess = () => {
+    fetchUserProfile();
+    fetchLeaderboard();
+    toast({
+      title: "Success!",
+      description: "Activity submitted successfully. Points will be added once reviewed!",
+    });
+  };
+
+  const defaultLeaderboardData = [
     { rank: 1, name: "EcoWarriors Team", points: 2450, avatar: "/api/placeholder/32/32" },
     { rank: 2, name: "Green Guardians", points: 2380, avatar: "/api/placeholder/32/32" },
     { rank: 3, name: "Nature Ninjas", points: 2290, avatar: "/api/placeholder/32/32" },
     { rank: 4, name: "Planet Protectors", points: 2150, avatar: "/api/placeholder/32/32" },
     { rank: 5, name: "Sustainability Squad", points: 2050, avatar: "/api/placeholder/32/32" }
   ];
+
+  const displayLeaderboard = leaderboardData.length > 0 ? leaderboardData : defaultLeaderboardData;
 
   const sponsors = [
     { name: "EcoBank", logo: "🏦", reward: "$500 Monthly Winner" },
@@ -55,17 +165,37 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="px-4 py-6 border-b border-border/50">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src={ecoIcon} alt="GreenPoints" className="w-10 h-10 rounded-lg" />
             <h1 className="text-2xl font-bold text-primary">GreenPoints</h1>
           </div>
-          <Button variant="outline" className="gap-2">
-            <Users className="w-4 h-4" />
-            Join Community
-          </Button>
+          <div className="flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <Badge className="bg-success/10 text-success border-success/30">
+                  {userProfile?.points || 0} points
+                </Badge>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <User className="w-4 h-4" />
+                      {userProfile?.username || 'Profile'}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 p-0">
+                    <UserProfile onClose={() => setUserProfileOpen(false)} />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            ) : (
+              <Button variant="outline" className="gap-2" onClick={handleJoinCommunity}>
+                <Users className="w-4 h-4" />
+                Join Community
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -86,9 +216,9 @@ const Index = () => {
                 Earn points, compete with friends, and create positive environmental impact through weekly community challenges.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6">
+                <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6" onClick={handleStartJourney}>
                   <Leaf className="w-5 h-5 mr-2" />
-                  Start Your Journey
+                  {user ? 'View Challenges' : 'Start Your Journey'}
                 </Button>
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-6">
                   <Camera className="w-5 h-5 mr-2" />
@@ -114,7 +244,7 @@ const Index = () => {
       </section>
 
       {/* Weekly Activities */}
-      <section className="py-20 bg-muted/30">
+      <section id="activities" className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
@@ -146,8 +276,8 @@ const Index = () => {
                     <span>👥 {activity.participants} joined</span>
                     <span>⏰ {activity.timeLeft}</span>
                   </div>
-                  <Button className="w-full bg-primary hover:bg-primary/90">
-                    Join Challenge
+                  <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => handleJoinChallenge(activity)}>
+                    {user ? 'Submit Activity' : 'Join Challenge'}
                   </Button>
                 </CardContent>
               </Card>
@@ -172,7 +302,7 @@ const Index = () => {
               </p>
               
               <div className="space-y-4 mb-8">
-                {leaderboardData.slice(0, 3).map((team) => (
+                {displayLeaderboard.slice(0, 3).map((team) => (
                   <div key={team.rank} className="flex items-center gap-4 p-4 rounded-xl bg-gradient-card border">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
                       {team.rank}
@@ -306,9 +436,9 @@ const Index = () => {
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join thousands of eco-champions making positive environmental impact one challenge at a time.
           </p>
-          <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-12 py-6">
+          <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-12 py-6" onClick={handleStartJourney}>
             <Leaf className="w-5 h-5 mr-2" />
-            Download GreenPoints
+            {user ? 'View My Activities' : 'Download GreenPoints'}
           </Button>
           <p className="text-white/70 mt-4">
             Available on iOS and Android • Free to join
@@ -335,6 +465,15 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Modals */}
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+      <ActivitySubmission
+        activity={selectedActivity}
+        isOpen={activityModalOpen}
+        onClose={() => setActivityModalOpen(false)}
+        onSuccess={handleActivitySuccess}
+      />
     </div>
   );
 };
