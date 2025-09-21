@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { AuthModal } from "@/components/AuthModal";
 import { UserProfile } from "@/components/UserProfile";
 import { ActivitySubmission } from "@/components/ActivitySubmission";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/hero-image.jpg";
 import ecoIcon from "@/assets/eco-icon.jpg";
