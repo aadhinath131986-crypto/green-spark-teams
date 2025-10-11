@@ -8,6 +8,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Leaf, Mail, Lock, User, Users } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useToast } from '@/hooks/use-toast'
+import { z } from 'zod'
+
+const signUpSchema = z.object({
+  email: z.string().email('Invalid email address').max(255, 'Email too long'),
+  password: z.string().min(8, 'Password must be at least 8 characters').max(100, 'Password too long'),
+  username: z.string().min(3, 'Username must be at least 3 characters').max(30, 'Username too long').regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
+  teamName: z.string().max(50, 'Team name too long').optional()
+})
 
 interface AuthModalProps {
   isOpen: boolean
@@ -58,6 +66,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+
+    // Validate input
+    const result = signUpSchema.safeParse(signUpData)
+    if (!result.success) {
+      const firstError = result.error.errors[0]
+      toast({
+        title: 'Validation Error',
+        description: firstError.message,
+        variant: 'destructive',
+      })
+      setLoading(false)
+      return
+    }
 
     const { error } = await signUp(signUpData.email, signUpData.password, signUpData.username)
 

@@ -12,6 +12,14 @@ import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
 import { Camera as CapCamera } from '@capacitor/camera'
 import { CameraResultType, CameraSource } from '@capacitor/camera'
+import { z } from 'zod'
+
+const activitySchema = z.object({
+  description: z.string().max(500, 'Description must be under 500 characters').optional(),
+  imageFile: z.instanceof(File)
+    .refine(file => file.size <= 5 * 1024 * 1024, 'Image must be under 5MB')
+    .refine(file => ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type), 'Invalid image type')
+})
 
 interface Activity {
   id: string
@@ -113,25 +121,48 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
     setLoading(true)
 
     try {
+      // Validate input
+      if (!imageFile) {
+        toast({
+          title: 'Validation Error',
+          description: 'Please upload a proof image',
+          variant: 'destructive',
+        })
+        setLoading(false)
+        return
+      }
+
+      const result = activitySchema.safeParse({ description, imageFile })
+      if (!result.success) {
+        const firstError = result.error.errors[0]
+        toast({
+          title: 'Validation Error',
+          description: firstError.message,
+          variant: 'destructive',
+        })
+        setLoading(false)
+        return
+      }
+
       let imageUrl = null
 
       // Upload image if provided
-      if (imageFile) {
-        const fileExt = imageFile.name.split('.').pop()
-        const fileName = `${user.id}-${activity.id}-${Date.now()}.${fileExt}`
-        
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('activity-proofs')
-          .upload(fileName, imageFile)
+      const fileExt = imageFile.name.split('.').pop()
+      const fileName = `${user.id}/${activity.id}-${Date.now()}.${fileExt}`
+      
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('activity-proofs')
+        .upload(fileName, imageFile)
 
-        if (uploadError) throw uploadError
+      if (uploadError) throw uploadError
 
-        const { data: { publicUrl } } = supabase.storage
-          .from('activity-proofs')
-          .getPublicUrl(fileName)
-        
-        imageUrl = publicUrl
-      }
+      // Get signed URL instead of public URL (bucket is now private)
+      const { data: signedData, error: signedError } = await supabase.storage
+        .from('activity-proofs')
+        .createSignedUrl(fileName, 31536000) // 1 year expiry
+      
+      if (signedError) throw signedError
+      imageUrl = signedData.signedUrl
 
       // Submit activity
       const { error } = await supabase
@@ -141,6 +172,7 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
             user_id: user.id,
             activity_id: activity.id,
             proof_image_url: imageUrl,
+            description: description || null,
             status: 'pending',
             points_awarded: 0,
             submitted_at: new Date().toISOString(),
