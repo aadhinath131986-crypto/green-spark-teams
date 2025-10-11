@@ -10,6 +10,8 @@ import { Camera, Upload, Star } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
+import { Camera as CapCamera } from '@capacitor/camera'
+import { CameraResultType, CameraSource } from '@capacitor/camera'
 
 interface Activity {
   id: string
@@ -48,6 +50,59 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
         setImagePreview(reader.result as string)
       }
       reader.readAsDataURL(file)
+    }
+  }
+
+  const handleTakePhoto = async () => {
+    try {
+      const photo = await CapCamera.getPhoto({
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Camera,
+        quality: 90,
+        allowEditing: false,
+        saveToGallery: true
+      })
+
+      if (photo.webPath) {
+        // Convert to blob for upload
+        const response = await fetch(photo.webPath)
+        const blob = await response.blob()
+        const file = new File([blob], `photo-${Date.now()}.jpg`, { type: 'image/jpeg' })
+        
+        setImageFile(file)
+        setImagePreview(photo.webPath)
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Camera Error',
+        description: error.message || 'Failed to take photo',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const handleChooseFromGallery = async () => {
+    try {
+      const photo = await CapCamera.getPhoto({
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Photos,
+        quality: 90
+      })
+
+      if (photo.webPath) {
+        const response = await fetch(photo.webPath)
+        const blob = await response.blob()
+        const file = new File([blob], `photo-${Date.now()}.jpg`, { type: 'image/jpeg' })
+        
+        setImageFile(file)
+        setImagePreview(photo.webPath)
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Gallery Error',
+        description: error.message || 'Failed to select photo',
+        variant: 'destructive',
+      })
     }
   }
 
@@ -172,23 +227,34 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
                     <div className="space-y-3">
                       <Camera className="w-8 h-8 text-muted-foreground mx-auto" />
                       <div>
-                        <p className="text-sm text-muted-foreground">
-                          Upload a photo showing your completed activity
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Capture proof of your completed activity
                         </p>
+                        <div className="flex gap-2 justify-center">
+                          <Button 
+                            type="button" 
+                            variant="default" 
+                            onClick={handleTakePhoto}
+                          >
+                            <Camera className="w-4 h-4 mr-2" />
+                            Take Photo
+                          </Button>
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            onClick={handleChooseFromGallery}
+                          >
+                            <Upload className="w-4 h-4 mr-2" />
+                            Choose Photo
+                          </Button>
+                        </div>
                         <Input
                           type="file"
                           accept="image/*"
                           onChange={handleImageChange}
                           className="hidden"
                           id="image-upload"
-                          required
                         />
-                        <Label htmlFor="image-upload" className="cursor-pointer">
-                          <Button type="button" variant="outline" className="mt-2">
-                            <Upload className="w-4 h-4 mr-2" />
-                            Choose Photo
-                          </Button>
-                        </Label>
                       </div>
                     </div>
                   )}
