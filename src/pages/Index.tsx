@@ -70,10 +70,10 @@ const Index = () => {
 
   const fetchLeaderboard = async () => {
     try {
+      // Use leaderboard view that excludes sensitive data like email
       const { data, error } = await supabase
-        .from('profiles')
+        .from('leaderboard_profiles')
         .select('username, points, team_name, avatar_url')
-        .order('points', { ascending: false })
         .limit(5);
 
       if (data) {
