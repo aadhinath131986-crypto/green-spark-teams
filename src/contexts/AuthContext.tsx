@@ -51,23 +51,54 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
+    console.log('[AUTH] Attempting sign in for email:', email)
+    
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(), // Normalize email
       password,
     })
+    
+    if (error) {
+      console.error('[AUTH] Sign in error:', {
+        code: error.code,
+        message: error.message,
+        status: error.status,
+        name: error.name
+      })
+    } else {
+      console.log('[AUTH] Sign in successful for user:', data.user?.email)
+    }
+    
     return { error }
   }
 
   const signUp = async (email: string, password: string, username: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
+    console.log('[AUTH] Attempting sign up for email:', email, 'username:', username)
+    
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim().toLowerCase(), // Normalize email
       password,
       options: {
+        emailRedirectTo: `${window.location.origin}/`,
         data: {
           username: username
         }
       }
     })
+
+    if (error) {
+      console.error('[AUTH] Sign up error:', {
+        code: error.code,
+        message: error.message,
+        status: error.status,
+        name: error.name
+      })
+    } else {
+      console.log('[AUTH] Sign up successful. User:', data.user?.email, 'Email confirmed:', !!data.user?.email_confirmed_at)
+      if (data.user && !data.user.email_confirmed_at) {
+        console.warn('[AUTH] Email confirmation required - check inbox')
+      }
+    }
 
     return { error }
   }

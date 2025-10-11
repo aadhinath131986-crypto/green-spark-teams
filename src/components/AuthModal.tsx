@@ -44,15 +44,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     e.preventDefault()
     setLoading(true)
 
+    console.log('[AuthModal] Attempting sign in with email:', signInData.email)
+
     const { error } = await signIn(signInData.email, signInData.password)
 
     if (error) {
+      console.error('[AuthModal] Sign in failed:', error.message)
+      
+      let errorMessage = error.message
+      if (error.message.includes('Invalid login credentials')) {
+        errorMessage = 'Invalid email or password. Please check your credentials and try again.'
+      } else if (error.message.includes('Email not confirmed')) {
+        errorMessage = 'Please confirm your email address before signing in. Check your inbox for the confirmation link.'
+      }
+      
       toast({
         title: 'Sign In Error',
-        description: error.message,
+        description: errorMessage,
         variant: 'destructive',
       })
     } else {
+      console.log('[AuthModal] Sign in successful')
       toast({
         title: 'Welcome back!',
         description: 'Successfully signed in to GreenPoints',
