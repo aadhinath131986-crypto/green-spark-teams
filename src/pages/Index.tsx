@@ -381,34 +381,27 @@ const Index = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[1, 2, 3].map((i) => (
-              <Card key={i} className="overflow-hidden shadow-soft hover:shadow-medium transition-all duration-300">
-                <div className="aspect-square bg-gradient-success relative">
+              <Card key={i} className="overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+                <div className="aspect-square bg-gradient-to-br from-green-500 to-green-300 relative">
                   <div className="absolute inset-0 flex items-center justify-center text-white">
-                    <Camera className="w-12 h-12 opacity-50" />
+                    <Camera className="w-16 h-16" />
                   </div>
                   <div className="absolute bottom-4 left-4">
-                    <Badge className="bg-white/20 text-white border-white/30">
+                    <Badge className="bg-white/90 text-green-700 border-0 font-semibold">
                       +{5 + i * 2} points
                     </Badge>
                   </div>
                 </div>
-                <CardContent className="p-4">
+                <CardContent className="p-4 bg-white">
                   <div className="flex items-center gap-3 mb-2">
-                    <Avatar className="w-8 h-8">
+                    <Avatar className="w-8 h-8 bg-primary text-white">
                       <AvatarFallback>U{i}</AvatarFallback>
                     </Avatar>
-                    <span className="font-semibold">EcoChampion{i}</span>
+                    <span className="font-semibold text-foreground">EcoChampion{i}</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
                     Just completed the recycling challenge! 🌱
                   </p>
-                  <div className="flex items-center gap-4 mt-3 text-sm text-muted-foreground">
-                    <button className="flex items-center gap-1 hover:text-primary">
-                      <Heart className="w-4 h-4" />
-                      {12 + i * 3}
-                    </button>
-                    <span>2h ago</span>
-                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -433,11 +426,11 @@ const Index = () => {
           
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {sponsors.map((sponsor) => (
-              <Card key={sponsor.name} className="text-center p-8 shadow-soft hover:shadow-medium transition-all duration-300 bg-gradient-card border-0">
+              <Card key={sponsor.name} className="text-center p-8 shadow-md hover:shadow-lg transition-all duration-300 bg-white border">
                 <div className="text-6xl mb-4">{sponsor.logo}</div>
-                <h4 className="text-2xl font-bold mb-2">{sponsor.name}</h4>
+                <h4 className="text-2xl font-bold mb-2 text-foreground">{sponsor.name}</h4>
                 <p className="text-muted-foreground mb-4">{sponsor.reward}</p>
-                <Badge className="bg-primary/10 text-primary border-primary/20">
+                <Badge className="bg-green-100 text-green-700 border-green-200 font-semibold">
                   Partner Sponsor
                 </Badge>
               </Card>
@@ -447,7 +440,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-hero">
+      <section className="py-20 bg-gradient-to-r from-green-600 via-green-500 to-cyan-500">
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-4xl lg:text-5xl font-bold text-white mb-6">
             Ready to Make a Difference?
@@ -455,11 +448,11 @@ const Index = () => {
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join thousands of eco-champions making positive environmental impact one challenge at a time.
           </p>
-          <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-12 py-6" onClick={handleStartJourney}>
+          <Button size="lg" className="bg-white text-green-700 hover:bg-white/90 text-lg px-12 py-6" onClick={handleStartJourney}>
             <Leaf className="w-5 h-5 mr-2" />
-            {user ? 'View My Activities' : 'Download GreenPoints'}
+            {user ? 'View My Activities' : 'Get Started'}
           </Button>
-          <p className="text-white/70 mt-4">
+          <p className="text-white/80 mt-4 text-sm">
             Available on iOS and Android • Free to join
           </p>
         </div>
