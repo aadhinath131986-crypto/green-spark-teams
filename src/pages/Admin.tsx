@@ -184,58 +184,58 @@ export const Admin = () => {
     <div className="min-h-screen bg-background p-6">
       <div className="container mx-auto max-w-7xl">
         <div className="mb-6">
-          <Button variant="secondary" onClick={() => navigate("/")} className="mb-4 border-4 border-border font-bold">
+          <Button variant="outline" onClick={() => navigate("/")} className="mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Button>
-          <h1 className="text-5xl font-black text-primary mb-2" style={{ textShadow: '3px 3px 0px hsl(var(--secondary))' }}>Admin Dashboard</h1>
-          <p className="text-muted-foreground font-bold text-lg">Review and approve submissions</p>
+          <h1 className="text-4xl font-bold text-primary mb-2">Admin Dashboard</h1>
+          <p className="text-muted-foreground">Review and approve submissions</p>
         </div>
 
         <Tabs defaultValue="challenges" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-2 border-4 border-border p-1">
-            <TabsTrigger value="challenges" className="font-bold data-[state=active]:border-4 data-[state=active]:border-border">Challenge Submissions</TabsTrigger>
-            <TabsTrigger value="general" className="font-bold data-[state=active]:border-4 data-[state=active]:border-border">General Submissions</TabsTrigger>
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="challenges">Challenge Submissions</TabsTrigger>
+            <TabsTrigger value="general">General Submissions</TabsTrigger>
           </TabsList>
 
           <TabsContent value="challenges" className="mt-6">
             <div className="grid gap-4">
               {userActivities.filter(a => a.status === 'pending').length === 0 && (
-                <p className="text-center text-muted-foreground font-bold py-8">No pending challenge submissions</p>
+                <p className="text-center text-muted-foreground py-8">No pending challenge submissions</p>
               )}
               {userActivities.filter(a => a.status === 'pending').map((activity) => (
-                <Card key={activity.id} className="border-4 border-border">
+                <Card key={activity.id}>
                   <CardHeader>
-                    <CardTitle className="flex items-center justify-between text-2xl font-black">
+                    <CardTitle className="flex items-center justify-between">
                       <span>{activity.activities?.title || "Activity"}</span>
-                      <Badge className="bg-warning text-warning-foreground border-0 font-bold">{activity.status}</Badge>
+                      <Badge variant="outline">{activity.status}</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-muted-foreground font-semibold mb-2">
-                          <strong className="font-black">User:</strong> {activity.profiles?.username} ({activity.profiles?.email})
+                        <p className="text-sm text-muted-foreground mb-2">
+                          <strong>User:</strong> {activity.profiles?.username} ({activity.profiles?.email})
                         </p>
-                        <p className="text-sm text-muted-foreground font-semibold mb-2">
-                          <strong className="font-black">Description:</strong> {activity.description || "No description"}
+                        <p className="text-sm text-muted-foreground mb-2">
+                          <strong>Description:</strong> {activity.description || "No description"}
                         </p>
-                        <p className="text-sm text-muted-foreground font-semibold">
-                          <strong className="font-black">Submitted:</strong> {new Date(activity.submitted_at).toLocaleString()}
+                        <p className="text-sm text-muted-foreground">
+                          <strong>Submitted:</strong> {new Date(activity.submitted_at).toLocaleString()}
                         </p>
                       </div>
                       {activity.proof_image_url && (
                         <img 
                           src={activity.proof_image_url} 
                           alt="Proof" 
-                          className="w-full h-48 object-cover rounded-2xl border-4 border-border"
+                          className="w-full h-48 object-cover rounded-lg border"
                         />
                       )}
                     </div>
                     <div className="flex gap-2 mt-4">
                       <Button 
                         onClick={() => handleApproveActivity(activity.id, activity.activities?.points || 10)}
-                        className="flex-1 border-4 border-border font-bold"
+                        className="flex-1"
                       >
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Approve
@@ -243,7 +243,7 @@ export const Admin = () => {
                       <Button 
                         variant="destructive"
                         onClick={() => handleRejectActivity(activity.id)}
-                        className="flex-1 border-4 border-border font-bold"
+                        className="flex-1"
                       >
                         <XCircle className="w-4 h-4 mr-2" />
                         Reject
@@ -258,49 +258,49 @@ export const Admin = () => {
           <TabsContent value="general" className="mt-6">
             <div className="grid gap-4">
               {generalSubmissions.filter(s => s.status === 'pending').length === 0 && (
-                <p className="text-center text-muted-foreground font-bold py-8">No pending general submissions</p>
+                <p className="text-center text-muted-foreground py-8">No pending general submissions</p>
               )}
               {generalSubmissions.filter(s => s.status === 'pending').map((submission) => (
-                <Card key={submission.id} className="border-4 border-border">
+                <Card key={submission.id}>
                   <CardHeader>
-                    <CardTitle className="flex items-center justify-between text-2xl font-black">
+                    <CardTitle className="flex items-center justify-between">
                       <span>General Submission</span>
-                      <Badge className="bg-warning text-warning-foreground border-0 font-bold">{submission.status}</Badge>
+                      <Badge variant="outline">{submission.status}</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-muted-foreground font-semibold mb-2">
-                          <strong className="font-black">Name:</strong> {submission.full_name}
+                        <p className="text-sm text-muted-foreground mb-2">
+                          <strong>Name:</strong> {submission.full_name}
                         </p>
-                        <p className="text-sm text-muted-foreground font-semibold mb-2">
-                          <strong className="font-black">Phone:</strong> {submission.phone_number}
+                        <p className="text-sm text-muted-foreground mb-2">
+                          <strong>Phone:</strong> {submission.phone_number}
                         </p>
                         {submission.email && (
-                          <p className="text-sm text-muted-foreground font-semibold mb-2">
-                            <strong className="font-black">Email:</strong> {submission.email}
+                          <p className="text-sm text-muted-foreground mb-2">
+                            <strong>Email:</strong> {submission.email}
                           </p>
                         )}
-                        <p className="text-sm text-muted-foreground font-semibold mb-2">
-                          <strong className="font-black">Action:</strong> {submission.reason}
+                        <p className="text-sm text-muted-foreground mb-2">
+                          <strong>Action:</strong> {submission.reason}
                         </p>
-                        <p className="text-sm text-muted-foreground font-semibold">
-                          <strong className="font-black">Submitted:</strong> {new Date(submission.submitted_at).toLocaleString()}
+                        <p className="text-sm text-muted-foreground">
+                          <strong>Submitted:</strong> {new Date(submission.submitted_at).toLocaleString()}
                         </p>
                       </div>
                       {submission.photo_url && (
                         <img 
                           src={submission.photo_url} 
                           alt="Submission" 
-                          className="w-full h-48 object-cover rounded-2xl border-4 border-border"
+                          className="w-full h-48 object-cover rounded-lg border"
                         />
                       )}
                     </div>
                     <div className="flex gap-2 mt-4">
                       <Button 
                         onClick={() => handleApproveGeneral(submission.id)}
-                        className="flex-1 border-4 border-border font-bold"
+                        className="flex-1"
                       >
                         <CheckCircle className="w-4 h-4 mr-2" />
                         Approve (+10 pts)
@@ -308,7 +308,7 @@ export const Admin = () => {
                       <Button 
                         variant="destructive"
                         onClick={() => handleRejectGeneral(submission.id)}
-                        className="flex-1 border-4 border-border font-bold"
+                        className="flex-1"
                       >
                         <XCircle className="w-4 h-4 mr-2" />
                         Reject

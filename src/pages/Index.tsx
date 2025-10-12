@@ -182,40 +182,41 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="px-4 py-6 bg-primary border-b-4 border-border">
+      <header className="px-4 py-6 bg-primary/5 border-b">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center border-4 border-border">
-              <Leaf className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+              <Leaf className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-3xl font-black text-primary-foreground" style={{ textShadow: '3px 3px 0px rgba(0,0,0,0.2)' }}>GreenPoints</h1>
+            <h1 className="text-2xl font-bold text-primary">GreenPoints</h1>
           </div>
           <div className="flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-3">
                 {isAdmin && (
-                  <Button variant="secondary" className="gap-2 border-4 border-border font-bold" onClick={() => navigate("/admin")}>
+                  <Button variant="outline" className="gap-2" onClick={() => navigate("/admin")}>
                     <Shield className="w-4 h-4" />
                     Admin
                   </Button>
                 )}
-                <div className="bg-accent text-accent-foreground border-4 border-border rounded-full px-6 py-2">
-                  <span className="text-2xl font-black">⭐ {userProfile?.points || 0}</span>
+                <div className="flex items-center gap-2 text-success font-semibold">
+                  <Star className="w-5 h-5" />
+                  <span className="text-lg">{userProfile?.points || 0} pts</span>
                 </div>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="secondary" className="gap-2 border-4 border-border font-bold">
+                    <Button variant="outline" className="gap-2">
                       <User className="w-4 h-4" />
                       {userProfile?.username || 'Profile'}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-80 p-0 border-4 border-border">
+                  <PopoverContent className="w-80 p-0">
                     <UserProfile onClose={() => setUserProfileOpen(false)} />
                   </PopoverContent>
                 </Popover>
               </div>
             ) : (
-              <Button variant="secondary" className="gap-2 border-4 border-border font-bold" onClick={handleJoinCommunity}>
+              <Button variant="outline" className="gap-2" onClick={handleJoinCommunity}>
                 <Users className="w-4 h-4" />
                 Join Community
               </Button>
@@ -225,66 +226,36 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-gradient-to-br from-primary/10 via-background to-background">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-8">
-              <h2 className="text-6xl lg:text-7xl font-black text-foreground mb-4" style={{ textShadow: '4px 4px 0px hsl(var(--secondary))' }}>
-                Hey, {user ? userProfile?.username || 'Friend' : 'there'}! 👋
-              </h2>
-              <p className="text-2xl text-muted-foreground font-bold">
-                Let's make the planet greener together!
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-              <Card className="border-4 border-border bg-card p-8 hover:scale-105 transition-transform">
-                <div className="mb-4">
-                  <div className="w-20 h-20 mx-auto bg-secondary rounded-3xl flex items-center justify-center border-4 border-border">
-                    <Leaf className="w-10 h-10 text-primary" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-black text-foreground mb-2">Environment</h3>
-                <p className="text-muted-foreground font-semibold">Take eco-friendly actions</p>
-              </Card>
-
-              <Card className="border-4 border-border bg-card p-8 hover:scale-105 transition-transform">
-                <div className="mb-4">
-                  <div className="w-20 h-20 mx-auto bg-accent rounded-3xl flex items-center justify-center border-4 border-border">
-                    <Star className="w-10 h-10 text-primary" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-black text-foreground mb-2">Initiatives</h3>
-                <p className="text-muted-foreground font-semibold">Join weekly challenges</p>
-              </Card>
-
-              <Card className="border-4 border-border bg-card p-8 hover:scale-105 transition-transform">
-                <div className="mb-4">
-                  <div className="w-20 h-20 mx-auto bg-secondary rounded-3xl flex items-center justify-center border-4 border-border">
-                    <Users className="w-10 h-10 text-primary" />
-                  </div>
-                </div>
-                <h3 className="text-xl font-black text-foreground mb-2">Community</h3>
-                <p className="text-muted-foreground font-semibold">Connect with others</p>
-              </Card>
-            </div>
-
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
+              Make Every Action Count
+            </Badge>
+            <h2 className="text-5xl lg:text-6xl font-bold text-foreground mb-6">
+              Turn Eco-Actions into
+              <span className="text-primary"> Real Rewards</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Join thousands of eco-warriors making a difference. Complete weekly challenges,
+              earn points, and compete for amazing prizes while saving our planet.
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground text-xl px-12 py-8 border-4 border-border font-black rounded-full shadow-strong"
-                style={{ textShadow: '2px 2px 0px rgba(0,0,0,0.2)' }}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8"
                 onClick={handleStartJourney}
               >
                 {user ? 'View Challenges' : 'Get Started'}
               </Button>
               <Button 
                 size="lg" 
-                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xl px-12 py-8 border-4 border-border font-black rounded-full shadow-strong"
+                variant="outline"
+                className="text-lg px-8"
                 onClick={() => setGeneralSubmissionOpen(true)}
               >
-                <Upload className="w-6 h-6 mr-2" />
-                Share Action
+                <Upload className="w-5 h-5 mr-2" />
+                Share Your Action
               </Button>
             </div>
           </div>

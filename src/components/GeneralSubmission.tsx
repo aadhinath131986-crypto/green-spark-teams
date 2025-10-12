@@ -137,72 +137,68 @@ export const GeneralSubmission = ({ open, onOpenChange }: GeneralSubmissionProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto border-4 border-border">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-3xl font-black">Share Your Eco Action! 🌱</DialogTitle>
+          <DialogTitle className="text-2xl">Share Your Eco Action! 🌱</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 mt-4">
           <div>
-            <Label htmlFor="fullName" className="font-bold text-base">Full Name *</Label>
+            <Label htmlFor="fullName">Full Name *</Label>
             <Input
               id="fullName"
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
               placeholder="Your name"
-              className="border-4 border-border rounded-2xl font-semibold"
             />
           </div>
 
           <div>
-            <Label htmlFor="phoneNumber" className="font-bold text-base">Phone Number *</Label>
+            <Label htmlFor="phoneNumber">Phone Number *</Label>
             <Input
               id="phoneNumber"
               value={formData.phoneNumber}
               onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
               placeholder="Your phone number"
-              className="border-4 border-border rounded-2xl font-semibold"
             />
           </div>
 
           <div>
-            <Label htmlFor="email" className="font-bold text-base">Email (Optional)</Label>
+            <Label htmlFor="email">Email (Optional)</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="your@email.com"
-              className="border-4 border-border rounded-2xl font-semibold"
             />
           </div>
 
           <div>
-            <Label htmlFor="reason" className="font-bold text-base">What did you do? *</Label>
+            <Label htmlFor="reason">What did you do? *</Label>
             <Textarea
               id="reason"
               value={formData.reason}
               onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
               placeholder="Describe your eco-friendly action..."
               rows={4}
-              className="border-4 border-border rounded-2xl font-semibold"
             />
           </div>
 
           <div>
-            <Label className="font-bold text-base">Upload Photo *</Label>
+            <Label>Upload Photo *</Label>
             <div className="mt-2 space-y-3">
               {imagePreview && (
                 <div className="relative">
                   <img
                     src={imagePreview}
                     alt="Preview"
-                    className="w-full h-48 object-cover rounded-2xl border-4 border-border"
+                    className="w-full h-48 object-cover rounded-lg border-2 border-primary/20"
                   />
                   <Button
                     size="icon"
                     variant="destructive"
-                    className="absolute top-2 right-2 border-4 border-border"
+                    className="absolute top-2 right-2"
                     onClick={() => {
                       setImageFile(null);
                       setImagePreview("");
@@ -216,16 +212,16 @@ export const GeneralSubmission = ({ open, onOpenChange }: GeneralSubmissionProps
               <div className="flex gap-2">
                 <Button
                   type="button"
-                  variant="secondary"
-                  className="flex-1 border-4 border-border font-bold"
+                  variant="outline"
+                  className="flex-1"
                   onClick={handleTakePhoto}
                 >
                   📷 Take Photo
                 </Button>
                 <Button
                   type="button"
-                  variant="secondary"
-                  className="flex-1 border-4 border-border font-bold"
+                  variant="outline"
+                  className="flex-1"
                   onClick={() => document.getElementById("file-upload")?.click()}
                 >
                   <Upload className="w-4 h-4 mr-2" />
@@ -243,10 +239,10 @@ export const GeneralSubmission = ({ open, onOpenChange }: GeneralSubmissionProps
           </div>
 
           <div className="flex gap-2 pt-4">
-            <Button variant="secondary" onClick={() => onOpenChange(false)} className="flex-1 border-4 border-border font-bold">
+            <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
               Cancel
             </Button>
-            <Button onClick={handleSubmit} disabled={loading} className="flex-1 border-4 border-border font-bold">
+            <Button onClick={handleSubmit} disabled={loading} className="flex-1">
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />

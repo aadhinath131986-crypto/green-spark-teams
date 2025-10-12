@@ -137,43 +137,43 @@ export const UserActivities: React.FC = () => {
     <div className="space-y-6">
       {/* Stats Overview */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-gradient-card border-4 border-border">
+        <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-3xl font-black text-primary">{stats.total}</div>
-            <div className="text-sm text-muted-foreground font-bold">Total Activities</div>
+            <div className="text-2xl font-bold text-primary">{stats.total}</div>
+            <div className="text-sm text-muted-foreground">Total Activities</div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-card border-4 border-border">
+        <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-3xl font-black text-warning">{stats.pending}</div>
-            <div className="text-sm text-muted-foreground font-bold">Pending Review</div>
+            <div className="text-2xl font-bold text-orange-500">{stats.pending}</div>
+            <div className="text-sm text-muted-foreground">Pending Review</div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-card border-4 border-border">
+        <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-3xl font-black text-success">{stats.approved}</div>
-            <div className="text-sm text-muted-foreground font-bold">Approved</div>
+            <div className="text-2xl font-bold text-green-600">{stats.approved}</div>
+            <div className="text-sm text-muted-foreground">Approved</div>
           </CardContent>
         </Card>
         
-        <Card className="bg-gradient-card border-4 border-border">
+        <Card>
           <CardContent className="p-4 text-center">
             <div className="flex items-center justify-center gap-1">
-              <Star className="w-6 h-6 text-success" />
-              <span className="text-3xl font-black text-success">{stats.totalPoints}</span>
+              <Star className="w-5 h-5 text-primary" />
+              <span className="text-2xl font-bold text-primary">{stats.totalPoints}</span>
             </div>
-            <div className="text-sm text-muted-foreground font-bold">Points Earned</div>
+            <div className="text-sm text-muted-foreground">Points Earned</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Activities List */}
-      <Card className="border-4 border-border">
+      <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl font-black">
-            <Camera className="w-6 h-6" />
+          <CardTitle className="flex items-center gap-2">
+            <Camera className="w-5 h-5" />
             Your Activity Submissions
           </CardTitle>
         </CardHeader>
@@ -189,7 +189,7 @@ export const UserActivities: React.FC = () => {
               {activities.map((activity) => (
                 <div 
                   key={activity.id} 
-                  className="flex items-start gap-4 p-4 rounded-2xl border-4 border-border bg-gradient-card"
+                  className="flex items-start gap-4 p-4 rounded-lg border"
                 >
                   {/* Activity Image */}
                   <div className="flex-shrink-0">
@@ -210,19 +210,19 @@ export const UserActivities: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <h4 className="font-bold text-lg">{activity.activity.title}</h4>
-                        <p className="text-sm text-muted-foreground font-semibold">
+                        <h4 className="font-semibold">{activity.activity.title}</h4>
+                        <p className="text-sm text-muted-foreground">
                           {activity.activity.description}
                         </p>
                       </div>
-                      <Badge className={`${getStatusColor(activity.status)} font-bold`}>
+                      <Badge className={getStatusColor(activity.status)}>
                         {getStatusIcon(activity.status)}
                         {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
                       </Badge>
                     </div>
                     
                     <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-4 text-muted-foreground font-semibold">
+                      <div className="flex items-center gap-4 text-muted-foreground">
                         <span>Submitted: {formatDate(activity.submitted_at)}</span>
                         {activity.reviewed_at && (
                           <span>Reviewed: {formatDate(activity.reviewed_at)}</span>
@@ -230,7 +230,7 @@ export const UserActivities: React.FC = () => {
                       </div>
                       
                       {activity.status === 'approved' && (
-                        <Badge className="bg-success text-success-foreground border-0 font-bold">
+                        <Badge className="bg-green-100 text-green-700 border-green-200">
                           +{activity.points_awarded} points
                         </Badge>
                       )}

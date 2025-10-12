@@ -153,13 +153,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md border-4 border-border">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-center text-2xl font-black">
-            <Leaf className="w-6 h-6 text-primary" />
+          <DialogTitle className="flex items-center gap-2 text-center">
+            <Leaf className="w-5 h-5 text-primary" />
             {showPasswordReset ? 'Reset Password' : 'Join GreenPoints'}
           </DialogTitle>
-          <DialogDescription className="font-semibold">
+          <DialogDescription>
             {showPasswordReset 
               ? 'Enter your email to receive a password reset link' 
               : 'Sign in or create an account to start earning points'}
@@ -170,14 +170,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           <Card className="border-0 shadow-none">
             <CardContent className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="reset-email" className="font-bold">Email</Label>
+                <Label htmlFor="reset-email">Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="reset-email"
                     type="email"
                     placeholder="your@email.com"
-                    className="pl-9 border-4 border-border rounded-2xl font-semibold"
+                    className="pl-9"
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     required
@@ -186,8 +186,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex gap-2">
                 <Button 
-                  variant="secondary" 
-                  className="flex-1 border-4 border-border font-bold" 
+                  variant="outline" 
+                  className="flex-1" 
                   onClick={() => {
                     setShowPasswordReset(false)
                     setResetEmail('')
@@ -197,7 +197,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   Back
                 </Button>
                 <Button 
-                  className="flex-1 border-4 border-border font-bold" 
+                  className="flex-1" 
                   onClick={handlePasswordReset}
                   disabled={loading}
                 >
@@ -208,9 +208,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </Card>
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2 border-4 border-border p-1">
-            <TabsTrigger value="signin" className="font-bold data-[state=active]:border-4 data-[state=active]:border-border">Sign In</TabsTrigger>
-            <TabsTrigger value="signup" className="font-bold data-[state=active]:border-4 data-[state=active]:border-border">Sign Up</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="signin">Sign In</TabsTrigger>
+            <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
 
           <TabsContent value="signin">
@@ -218,14 +218,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               <CardContent className="space-y-4 pt-4">
                 <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signin-email" className="font-bold">Email</Label>
+                    <Label htmlFor="signin-email">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="signin-email"
                         type="email"
                         placeholder="your@email.com"
-                        className="pl-9 border-4 border-border rounded-2xl font-semibold"
+                        className="pl-9"
                         value={signInData.email}
                         onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
                         required
@@ -234,14 +234,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signin-password" className="font-bold">Password</Label>
+                    <Label htmlFor="signin-password">Password</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="signin-password"
                         type="password"
                         placeholder="••••••••"
-                        className="pl-9 border-4 border-border rounded-2xl font-semibold"
+                        className="pl-9"
                         value={signInData.password}
                         onChange={(e) => setSignInData({ ...signInData, password: e.target.value })}
                         required
@@ -253,13 +253,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                     <button
                       type="button"
                       onClick={() => setShowPasswordReset(true)}
-                      className="text-sm text-primary hover:underline font-bold"
+                      className="text-sm text-primary hover:underline"
                     >
                       Forgot password?
                     </button>
                   </div>
 
-                  <Button type="submit" className="w-full border-4 border-border font-black text-lg" disabled={loading}>
+                  <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? 'Signing In...' : 'Sign In'}
                   </Button>
                 </form>
@@ -272,14 +272,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               <CardContent className="space-y-4 pt-4">
                 <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-username" className="font-bold">Username</Label>
+                    <Label htmlFor="signup-username">Username</Label>
                     <div className="relative">
                       <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="signup-username"
                         type="text"
                         placeholder="EcoChampion123"
-                        className="pl-9 border-4 border-border rounded-2xl font-semibold"
+                        className="pl-9"
                         value={signUpData.username}
                         onChange={(e) => setSignUpData({ ...signUpData, username: e.target.value })}
                         required
@@ -288,14 +288,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email" className="font-bold">Email</Label>
+                    <Label htmlFor="signup-email">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="signup-email"
                         type="email"
                         placeholder="your@email.com"
-                        className="pl-9 border-4 border-border rounded-2xl font-semibold"
+                        className="pl-9"
                         value={signUpData.email}
                         onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
                         required
@@ -304,14 +304,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password" className="font-bold">Password</Label>
+                    <Label htmlFor="signup-password">Password</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="signup-password"
                         type="password"
                         placeholder="••••••••"
-                        className="pl-9 border-4 border-border rounded-2xl font-semibold"
+                        className="pl-9"
                         value={signUpData.password}
                         onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
                         required
@@ -320,21 +320,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signup-team" className="font-bold">Team Name (Optional)</Label>
+                    <Label htmlFor="signup-team">Team Name (Optional)</Label>
                     <div className="relative">
                       <Users className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="signup-team"
                         type="text"
                         placeholder="Green Warriors"
-                        className="pl-9 border-4 border-border rounded-2xl font-semibold"
+                        className="pl-9"
                         value={signUpData.teamName}
                         onChange={(e) => setSignUpData({ ...signUpData, teamName: e.target.value })}
                       />
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full border-4 border-border font-black text-lg" disabled={loading}>
+                  <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? 'Creating Account...' : 'Create Account'}
                   </Button>
                 </form>
