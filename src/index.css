@@ -6,58 +6,60 @@
 
 @layer base {
   :root {
-    /* Nature-inspired color palette */
-    --background: 120 25% 98%;
-    --foreground: 140 15% 12%;
+    /* Cartoonish vibrant color palette */
+    --background: 210 40% 98%;
+    --foreground: 220 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 140 15% 15%;
+    --card-foreground: 220 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 140 15% 15%;
+    --popover-foreground: 220 15% 15%;
 
-    /* Primary - Forest Green */
-    --primary: 145 65% 35%;
-    --primary-foreground: 0 0% 98%;
+    /* Primary - Vibrant Purple */
+    --primary: 280 85% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Ocean Blue */
-    --secondary: 200 85% 45%;
-    --secondary-foreground: 0 0% 98%;
+    /* Secondary - Fun Teal */
+    --secondary: 170 75% 50%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Muted - Soft Green */
-    --muted: 120 20% 95%;
-    --muted-foreground: 140 10% 45%;
+    /* Muted - Soft Lavender */
+    --muted: 220 30% 92%;
+    --muted-foreground: 220 15% 45%;
 
-    /* Accent - Earth Green */
-    --accent: 95 38% 62%;
-    --accent-foreground: 140 20% 15%;
+    /* Accent - Bright Yellow */
+    --accent: 45 100% 55%;
+    --accent-foreground: 220 15% 15%;
 
-    /* Success - Vibrant Green */
-    --success: 120 60% 50%;
-    --success-foreground: 0 0% 98%;
+    /* Success - Playful Green */
+    --success: 142 85% 45%;
+    --success-foreground: 0 0% 100%;
 
-    /* Warning - Amber */
-    --warning: 45 93% 58%;
-    --warning-foreground: 45 15% 15%;
+    /* Warning - Orange */
+    --warning: 25 100% 60%;
+    --warning-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 90% 65%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 120 25% 88%;
-    --input: 120 25% 92%;
-    --ring: 145 65% 35%;
+    --border: 220 25% 88%;
+    --input: 220 25% 92%;
+    --ring: 280 85% 60%;
 
-    /* Custom eco-friendly gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(145, 65%, 35%) 0%, hsl(200, 85%, 45%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(120, 25%, 98%) 0%, hsl(120, 20%, 95%) 100%);
-    --gradient-success: linear-gradient(90deg, hsl(120, 60%, 50%) 0%, hsl(95, 38%, 62%) 100%);
+    /* Playful gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(280, 85%, 60%) 0%, hsl(320, 85%, 60%) 50%, hsl(45, 100%, 55%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(220, 50%, 98%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(142, 85%, 45%) 0%, hsl(170, 75%, 50%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(280, 85%, 60%) 0%, hsl(320, 85%, 65%) 100%);
     
-    /* Shadows with green tints */
-    --shadow-soft: 0 2px 10px -2px hsl(145, 65%, 35%, 0.1);
-    --shadow-medium: 0 8px 30px -6px hsl(145, 65%, 35%, 0.15);
-    --shadow-strong: 0 20px 60px -15px hsl(145, 65%, 35%, 0.2);
+    /* Fun shadows with color */
+    --shadow-soft: 0 4px 12px -2px hsl(280, 85%, 60%, 0.15);
+    --shadow-medium: 0 8px 24px -4px hsl(280, 85%, 60%, 0.2);
+    --shadow-strong: 0 12px 32px -8px hsl(280, 85%, 60%, 0.25);
+    --shadow-glow: 0 0 24px hsl(45, 100%, 55%, 0.4);
 
-    --radius: 0.5rem;
+    --radius: 1.2rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -77,40 +79,46 @@
   }
 
   .dark {
-    /* Dark mode with eco-friendly theme */
-    --background: 140 20% 8%;
-    --foreground: 120 15% 92%;
+    /* Dark mode cartoonish theme */
+    --background: 260 30% 12%;
+    --foreground: 220 15% 95%;
 
-    --card: 140 15% 12%;
-    --card-foreground: 120 15% 92%;
+    --card: 260 25% 16%;
+    --card-foreground: 220 15% 95%;
 
-    --popover: 140 15% 12%;
-    --popover-foreground: 120 15% 92%;
+    --popover: 260 25% 16%;
+    --popover-foreground: 220 15% 95%;
 
-    --primary: 145 55% 45%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 280 85% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 70% 35%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 170 75% 55%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 140 15% 15%;
-    --muted-foreground: 120 10% 65%;
+    --muted: 260 25% 20%;
+    --muted-foreground: 220 15% 70%;
 
-    --accent: 95 35% 55%;
-    --accent-foreground: 140 20% 15%;
+    --accent: 45 100% 60%;
+    --accent-foreground: 260 30% 12%;
 
-    --success: 120 50% 45%;
-    --success-foreground: 0 0% 98%;
+    --success: 142 85% 50%;
+    --success-foreground: 0 0% 100%;
 
-    --warning: 45 85% 55%;
-    --warning-foreground: 45 15% 15%;
+    --warning: 25 100% 65%;
+    --warning-foreground: 0 0% 100%;
 
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 90% 70%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 140 15% 20%;
-    --input: 140 15% 18%;
-    --ring: 145 55% 45%;
+    --border: 260 25% 25%;
+    --input: 260 25% 22%;
+    --ring: 280 85% 65%;
+
+    /* Dark playful gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(280, 85%, 50%) 0%, hsl(320, 85%, 55%) 50%, hsl(45, 100%, 50%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(260, 25%, 16%) 0%, hsl(260, 30%, 20%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(142, 85%, 40%) 0%, hsl(170, 75%, 45%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(280, 85%, 55%) 0%, hsl(320, 85%, 60%) 100%);
 
     --sidebar-background: 140 20% 10%;
     --sidebar-foreground: 120 15% 85%;
@@ -166,6 +174,14 @@
   .animate-pulse-soft {
     animation: pulse-soft 3s ease-in-out infinite;
   }
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s ease-in-out infinite;
+  }
+
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
 }
 
 @keyframes float {
@@ -173,7 +189,7 @@
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-15px);
   }
 }
 
@@ -183,5 +199,14 @@
   }
   50% {
     opacity: 0.7;
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }

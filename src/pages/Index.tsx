@@ -4,12 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Leaf, Users, Trophy, Camera, Star, Recycle, TreePine, Heart, User } from "lucide-react";
+import { Leaf, Users, Trophy, Camera, Star, Recycle, TreePine, Heart, User, Upload, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthModal } from "@/components/AuthModal";
 import { UserProfile } from "@/components/UserProfile";
 import { ActivitySubmission } from "@/components/ActivitySubmission";
+import { GeneralSubmission } from "@/components/GeneralSubmission";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/hero-image.jpg";
@@ -19,12 +21,15 @@ import leaderboardImage from "@/assets/leaderboard-image.jpg";
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [userProfileOpen, setUserProfileOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [activityModalOpen, setActivityModalOpen] = useState(false);
+  const [generalSubmissionOpen, setGeneralSubmissionOpen] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const weeklyActivities = [
     {
@@ -61,12 +66,24 @@ const Index = () => {
     fetchLeaderboard();
   }, []);
 
-  // Fetch user profile when authenticated
+  // Fetch user profile and check admin status when authenticated
   useEffect(() => {
     if (user) {
       fetchUserProfile();
+      checkAdminStatus();
     }
   }, [user]);
+
+  const checkAdminStatus = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle();
+    setIsAdmin(!!data);
+  };
 
   const fetchLeaderboard = async () => {
     try {
@@ -174,8 +191,14 @@ const Index = () => {
           <div className="flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-3">
-                <Badge className="bg-success/10 text-success border-success/30">
-                  {userProfile?.points || 0} points
+                {isAdmin && (
+                  <Button variant="outline" className="gap-2" onClick={() => navigate("/admin")}>
+                    <Shield className="w-4 h-4" />
+                    Admin
+                  </Button>
+                )}
+                <Badge className="bg-success/10 text-success border-success/30 text-lg px-4 py-2 font-bold">
+                  ⭐ {userProfile?.points || 0} pts
                 </Badge>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -216,13 +239,22 @@ const Index = () => {
                 Earn points, compete with friends, and create positive environmental impact through weekly community challenges.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6" onClick={handleStartJourney}>
+                <Button 
+                  size="lg" 
+                  className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 shadow-glow" 
+                  onClick={handleStartJourney}
+                >
                   <Leaf className="w-5 h-5 mr-2" />
                   {user ? 'View Challenges' : 'Start Your Journey'}
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-6">
-                  <Camera className="w-5 h-5 mr-2" />
-                  See How It Works
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-white text-white hover:bg-white/10 text-lg px-8 py-6"
+                  onClick={() => setGeneralSubmissionOpen(true)}
+                >
+                  <Upload className="w-5 h-5 mr-2" />
+                  Share Your Action
                 </Button>
               </div>
             </div>
@@ -468,6 +500,12 @@ const Index = () => {
 
       {/* Modals */}
       <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+      
+      <GeneralSubmission 
+        open={generalSubmissionOpen}
+        onOpenChange={setGeneralSubmissionOpen}
+      />
+      
       <ActivitySubmission
         activity={selectedActivity}
         isOpen={activityModalOpen}
