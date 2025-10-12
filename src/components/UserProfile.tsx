@@ -79,20 +79,20 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onClose }) => {
   }
 
   return (
-    <Card className="w-full max-w-sm mx-auto shadow-medium">
+    <Card className="w-full max-w-sm mx-auto shadow-medium border-4 border-border">
       <CardContent className="p-6 space-y-6">
         {/* Profile Header */}
         <div className="text-center">
-          <Avatar className="w-20 h-20 mx-auto mb-4">
+          <Avatar className="w-20 h-20 mx-auto mb-4 border-4 border-border">
             <AvatarImage src={profile.avatar_url || ''} />
-            <AvatarFallback className="bg-primary text-primary-foreground text-2xl">
+            <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-black">
               {profile.username.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <h3 className="text-xl font-bold">{profile.username}</h3>
-          <p className="text-muted-foreground text-sm">{profile.email}</p>
+          <h3 className="text-2xl font-black">{profile.username}</h3>
+          <p className="text-muted-foreground text-sm font-semibold">{profile.email}</p>
           {profile.team_name && (
-            <Badge variant="outline" className="mt-2 bg-secondary/10 text-secondary border-secondary/30">
+            <Badge variant="outline" className="mt-2 bg-secondary text-secondary-foreground border-4 border-border font-bold">
               Team: {profile.team_name}
             </Badge>
           )}
@@ -101,25 +101,25 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onClose }) => {
         {/* Points & Rank */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
-            <Star className="w-5 h-5 text-success" />
-            <span className="text-2xl font-bold text-success">{profile.points}</span>
-            <span className="text-muted-foreground">points</span>
+            <Star className="w-6 h-6 text-success" />
+            <span className="text-3xl font-black text-success">{profile.points}</span>
+            <span className="text-muted-foreground font-bold">points</span>
           </div>
-          <Badge className="bg-gradient-success text-white border-0">
-            <Trophy className="w-3 h-3 mr-1" />
+          <Badge className="bg-gradient-success text-white border-0 font-black text-base px-4 py-2">
+            <Trophy className="w-4 h-4 mr-1" />
             {getRank(profile.points)}
           </Badge>
         </div>
 
         {/* Progress to Next Rank */}
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-sm font-bold">
             <span>Progress to next rank</span>
             <span>{profile.points % 200}/200</span>
           </div>
-          <div className="w-full bg-muted rounded-full h-2">
+          <div className="w-full bg-muted rounded-full h-3 border-4 border-border">
             <div 
-              className="bg-gradient-success h-2 rounded-full transition-all duration-500"
+              className="bg-gradient-success h-full rounded-full transition-all duration-500"
               style={{ width: `${((profile.points % 200) / 200) * 100}%` }}
             />
           </div>
@@ -128,8 +128,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onClose }) => {
         {/* Actions */}
         <div className="space-y-2">
           <Button 
-            variant="outline" 
-            className="w-full gap-2"
+            variant="secondary" 
+            className="w-full gap-2 border-4 border-border font-bold"
             onClick={handleSignOut}
           >
             <LogOut className="w-4 h-4" />

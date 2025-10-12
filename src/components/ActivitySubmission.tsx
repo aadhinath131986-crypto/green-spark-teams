@@ -210,9 +210,9 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md border-4 border-border">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-2xl font-black">
             {activity.icon}
             Submit: {activity.title}
           </DialogTitle>
@@ -221,12 +221,12 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
         <Card className="border-0 shadow-none">
           <CardContent className="space-y-6 pt-4">
             {/* Activity Info */}
-            <div className="flex items-center justify-between p-4 bg-gradient-card rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-gradient-card rounded-2xl border-4 border-border">
               <div>
-                <p className="font-medium">{activity.title}</p>
-                <p className="text-sm text-muted-foreground">{activity.description}</p>
+                <p className="font-bold text-lg">{activity.title}</p>
+                <p className="text-sm text-muted-foreground font-semibold">{activity.description}</p>
               </div>
-              <Badge className="bg-success/10 text-success border-success/30">
+              <Badge className="bg-success text-success-foreground border-0 font-black text-lg px-4 py-2">
                 +{activity.points} pts
               </Badge>
             </div>
@@ -234,8 +234,8 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Photo Upload */}
               <div className="space-y-2">
-                <Label>Proof Photo (Required)</Label>
-                <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                <Label className="font-bold text-base">Proof Photo (Required)</Label>
+                <div className="border-4 border-dashed border-border rounded-2xl p-6 text-center bg-muted/30">
                   {imagePreview ? (
                     <div className="space-y-3">
                       <img 
@@ -245,8 +245,9 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
                       />
                       <Button 
                         type="button" 
-                        variant="outline" 
+                        variant="secondary" 
                         size="sm"
+                        className="border-4 border-border font-bold"
                         onClick={() => {
                           setImageFile(null)
                           setImagePreview(null)
@@ -265,7 +266,7 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
                         <div className="flex gap-2 justify-center">
                           <Button 
                             type="button" 
-                            variant="default" 
+                            className="border-4 border-border font-bold"
                             onClick={handleTakePhoto}
                           >
                             <Camera className="w-4 h-4 mr-2" />
@@ -273,7 +274,8 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
                           </Button>
                           <Button 
                             type="button" 
-                            variant="outline" 
+                            variant="secondary" 
+                            className="border-4 border-border font-bold"
                             onClick={handleChooseFromGallery}
                           >
                             <Upload className="w-4 h-4 mr-2" />
@@ -295,13 +297,14 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
 
               {/* Description */}
               <div className="space-y-2">
-                <Label htmlFor="description">Description (Optional)</Label>
+                <Label htmlFor="description" className="font-bold text-base">Description (Optional)</Label>
                 <Textarea
                   id="description"
                   placeholder="Tell us about your eco-activity..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
+                  className="border-4 border-border rounded-2xl font-semibold"
                 />
               </div>
 
@@ -309,17 +312,17 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
               <div className="flex gap-3 pt-4">
                 <Button 
                   type="button" 
-                  variant="outline" 
+                  variant="secondary" 
                   onClick={onClose}
                   disabled={loading}
-                  className="flex-1"
+                  className="flex-1 border-4 border-border font-bold"
                 >
                   Cancel
                 </Button>
                 <Button 
                   type="submit" 
                   disabled={loading || !imageFile}
-                  className="flex-1 gap-2"
+                  className="flex-1 gap-2 border-4 border-border font-bold"
                 >
                   {loading ? (
                     'Submitting...'
