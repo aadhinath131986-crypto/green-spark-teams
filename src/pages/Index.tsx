@@ -33,31 +33,64 @@ const Index = () => {
 
   const weeklyActivities = [
     {
-      id: "recycle-bottles",
-      title: "Bottle Recycling Challenge",
-      description: "Collect and recycle plastic bottles in your neighborhood",
-      points: 5,
-      icon: <Recycle className="w-6 h-6" />,
-      participants: 245,
-      timeLeft: "3 days left"
-    },
-    {
-      id: "plant-trees",
-      title: "Community Tree Planting",
-      description: "Plant native trees in designated community areas",
-      points: 15,
+      id: "project-evergreen",
+      title: "Project Evergreen",
+      description: "Plant native trees in collaboration with local authorities",
+      points: 20,
       icon: <TreePine className="w-6 h-6" />,
       participants: 89,
-      timeLeft: "5 days left"
+      timeLeft: "5 days left",
+      difficulty: "Medium"
     },
     {
-      id: "park-cleanup",
-      title: "Park Cleanup Drive",
-      description: "Help clean local parks and public spaces",
+      id: "trash-to-treasure",
+      title: "Trash to Treasure",
+      description: "Plastic bottle and waste recycling drives",
       points: 10,
+      icon: <Recycle className="w-6 h-6" />,
+      participants: 245,
+      timeLeft: "3 days left",
+      difficulty: "Easy"
+    },
+    {
+      id: "blue-horizon-cleanup",
+      title: "Blue Horizon Cleanup",
+      description: "Beach and waterfront litter cleanup efforts",
+      points: 15,
       icon: <Heart className="w-6 h-6" />,
       participants: 156,
-      timeLeft: "2 days left"
+      timeLeft: "2 days left",
+      difficulty: "Easy"
+    },
+    {
+      id: "solar-switch",
+      title: "Solar Switch Challenge",
+      description: "Document your switch to solar-powered alternatives",
+      points: 25,
+      icon: <Star className="w-6 h-6" />,
+      participants: 67,
+      timeLeft: "6 days left",
+      difficulty: "Hard"
+    },
+    {
+      id: "water-warrior",
+      title: "Water Warrior",
+      description: "Install water-saving devices and track conservation",
+      points: 15,
+      icon: <Leaf className="w-6 h-6" />,
+      participants: 123,
+      timeLeft: "4 days left",
+      difficulty: "Medium"
+    },
+    {
+      id: "zero-waste-week",
+      title: "Zero Waste Week",
+      description: "Go completely waste-free for 7 days",
+      points: 30,
+      icon: <Trophy className="w-6 h-6" />,
+      participants: 45,
+      timeLeft: "1 day left",
+      difficulty: "Hard"
     }
   ];
 
@@ -91,9 +124,15 @@ const Index = () => {
       const { data, error } = await supabase
         .from('leaderboard_profiles')
         .select('username, points, team_name, avatar_url')
-        .limit(5);
+        .order('points', { ascending: false })
+        .limit(10);
 
-      if (data) {
+      if (error) {
+        console.error('Error fetching leaderboard:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
         const formattedData = data.map((profile, index) => ({
           rank: index + 1,
           name: profile.team_name || profile.username,
@@ -182,32 +221,32 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="px-4 py-6 bg-primary/5 border-b">
+      <header className="sticky top-0 z-50 px-4 py-4 bg-card/80 backdrop-blur-lg border-b shadow-soft">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-              <Leaf className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 bg-gradient-hero rounded-xl flex items-center justify-center shadow-medium">
+              <Leaf className="w-5 h-5 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-primary">GreenSpark</h1>
+            <h1 className="text-xl font-bold bg-gradient-hero bg-clip-text text-transparent">GreenSpark</h1>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {user ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {isAdmin && (
-                  <Button variant="outline" className="gap-2" onClick={() => navigate("/admin")}>
+                  <Button size="sm" variant="outline" className="gap-2" onClick={() => navigate("/admin")}>
                     <Shield className="w-4 h-4" />
-                    Admin
+                    <span className="hidden sm:inline">Admin</span>
                   </Button>
                 )}
-                <div className="flex items-center gap-2 text-success font-semibold">
-                  <Star className="w-5 h-5" />
-                  <span className="text-lg">{userProfile?.points || 0} pts</span>
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-success text-white font-semibold shadow-medium">
+                  <Star className="w-4 h-4" />
+                  <span className="text-sm">{userProfile?.points || 0}</span>
                 </div>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="gap-2">
+                    <Button size="sm" variant="outline" className="gap-2">
                       <User className="w-4 h-4" />
-                      {userProfile?.username || 'Profile'}
+                      <span className="hidden sm:inline">{userProfile?.username || 'Profile'}</span>
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80 p-0">
@@ -216,7 +255,7 @@ const Index = () => {
                 </Popover>
               </div>
             ) : (
-              <Button variant="outline" className="gap-2" onClick={handleJoinCommunity}>
+              <Button size="sm" className="gap-2 bg-gradient-hero hover:opacity-90" onClick={handleJoinCommunity}>
                 <Users className="w-4 h-4" />
                 Join Community
               </Button>
@@ -226,24 +265,24 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-primary/10 via-background to-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
-              Make Every Action Count
+      <section className="relative py-16 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
+            <Badge className="bg-gradient-success text-white border-0 shadow-medium px-4 py-1.5">
+              🌍 Community-Driven Sustainability
             </Badge>
-            <h2 className="text-5xl lg:text-6xl font-bold text-foreground mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
               Turn Eco-Actions into
-              <span className="text-primary"> Green Champions</span>
+              <span className="block mt-2 bg-gradient-hero bg-clip-text text-transparent">Green Champion Status</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join our community-driven sustainability movement. Complete weekly eco-challenges,
-              earn GreenPoints, and compete to become a Green Champion while making real environmental impact.
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Complete weekly challenges, earn GreenPoints, climb the leaderboard, and make real environmental impact in the UAE.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <Button 
                 size="lg" 
-                className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8"
+                className="bg-gradient-hero hover:opacity-90 text-white text-base px-8 shadow-medium"
                 onClick={handleStartJourney}
               >
                 {user ? 'View Challenges' : 'Get Started'}
@@ -251,7 +290,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="text-lg px-8"
+                className="text-base px-8"
                 onClick={() => setGeneralSubmissionOpen(true)}
               >
                 <Upload className="w-5 h-5 mr-2" />
@@ -263,40 +302,47 @@ const Index = () => {
       </section>
 
       {/* Weekly Activities */}
-      <section id="activities" className="py-20 bg-muted/30">
+      <section id="activities" className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
-              This Week's Challenges
+          <div className="text-center mb-12">
+            <Badge className="mb-3 bg-gradient-success text-white border-0 shadow-medium px-4 py-1.5">
+              Weekly Challenges
             </Badge>
-            <h3 className="text-4xl font-bold text-foreground mb-4">
+            <h3 className="text-3xl font-bold text-foreground mb-3">
               Choose Your Eco-Mission
             </h3>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Every week brings new opportunities to make a difference. Pick activities that match your schedule and interests.
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+              Complete challenges, upload proof, and earn GreenPoints to climb the leaderboard.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
             {weeklyActivities.map((activity) => (
-              <Card key={activity.id} className="group hover:scale-105 transition-all duration-300 shadow-soft hover:shadow-medium bg-gradient-card border-0">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+              <Card key={activity.id} className="group hover:scale-[1.02] transition-all duration-300 shadow-soft hover:shadow-medium border-border/50 overflow-hidden">
+                <div className="h-2 bg-gradient-hero"></div>
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="p-2.5 rounded-lg bg-gradient-success/10 text-primary">
                       {activity.icon}
                     </div>
-                    <Badge variant="outline" className="bg-success/10 text-success border-success/30">
+                    <Badge className="bg-gradient-success text-white border-0 font-semibold shadow-sm">
                       +{activity.points} pts
                     </Badge>
                   </div>
-                  <h4 className="text-xl font-semibold mb-2">{activity.title}</h4>
-                  <p className="text-muted-foreground mb-4">{activity.description}</p>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
-                    <span>👥 {activity.participants} joined</span>
+                  <h4 className="text-lg font-bold mb-2 text-foreground">{activity.title}</h4>
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{activity.description}</p>
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3 pb-3 border-b border-border/50">
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3 h-3" />
+                      {activity.participants}
+                    </span>
+                    <span>•</span>
                     <span>⏰ {activity.timeLeft}</span>
+                    <span>•</span>
+                    <Badge variant="outline" className="text-xs px-1.5 py-0">{activity.difficulty}</Badge>
                   </div>
-                  <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => handleJoinChallenge(activity)}>
-                    {user ? 'Submit Activity' : 'Join Challenge'}
+                  <Button size="sm" className="w-full bg-gradient-hero hover:opacity-90 text-white shadow-sm" onClick={() => handleJoinChallenge(activity)}>
+                    {user ? 'Submit Now' : 'Join Challenge'}
                   </Button>
                 </CardContent>
               </Card>
@@ -306,57 +352,65 @@ const Index = () => {
       </section>
 
       {/* Points & Leaderboard */}
-      <section className="py-20">
+      <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
             <div>
-              <Badge className="mb-4 bg-secondary/10 text-secondary border-secondary/20">
-                Competitive Impact
+              <Badge className="mb-3 bg-gradient-success text-white border-0 shadow-medium px-4 py-1.5">
+                🏆 Monthly Leaderboard
               </Badge>
-              <h3 className="text-4xl font-bold mb-6">
-                Climb the Green Leaderboard
+              <h3 className="text-3xl font-bold mb-4">
+                Become a Green Champion
               </h3>
-              <p className="text-xl text-muted-foreground mb-8">
-                Track your progress, compete with teams, and see your environmental impact grow with every challenge completed.
+              <p className="text-base text-muted-foreground mb-6">
+                Top performers each month win eco-friendly prizes and recognition as Green Champions. Track your progress and compete with the community!
               </p>
               
-              <div className="space-y-4 mb-8">
-                {displayLeaderboard.slice(0, 3).map((team) => (
-                  <div key={team.rank} className="flex items-center gap-4 p-4 rounded-xl bg-gradient-card border">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm">
+              <div className="space-y-3 mb-6">
+                {displayLeaderboard.slice(0, 5).map((team, index) => (
+                  <div key={team.rank} className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
+                    index < 3 ? 'bg-gradient-success/10 border-2 border-primary/20' : 'bg-muted/50 border border-border/50'
+                  }`}>
+                    <div className={`flex items-center justify-center w-8 h-8 rounded-lg font-bold text-sm shadow-sm ${
+                      index === 0 ? 'bg-warning text-warning-foreground' :
+                      index === 1 ? 'bg-muted text-muted-foreground' :
+                      index === 2 ? 'bg-accent/20 text-accent' :
+                      'bg-muted/50 text-muted-foreground'
+                    }`}>
                       {team.rank}
                     </div>
-                    <Avatar className="w-10 h-10">
+                    <Avatar className="w-9 h-9 border-2 border-background">
                       <AvatarImage src={team.avatar} />
                       <AvatarFallback>{team.name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <div className="flex-1">
-                      <p className="font-semibold">{team.name}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm truncate">{team.name}</p>
                       <div className="flex items-center gap-2">
-                        <Progress value={(team.points / 2500) * 100} className="flex-1 h-2" />
-                        <span className="text-sm font-medium text-success">{team.points} pts</span>
+                        <Progress value={(team.points / 2500) * 100} className="flex-1 h-1.5" />
+                        <span className="text-xs font-bold bg-gradient-success bg-clip-text text-transparent whitespace-nowrap">{team.points} pts</span>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
               
-              <Button size="lg" variant="outline" className="gap-2">
-                <Trophy className="w-5 h-5" />
-                View Full Leaderboard
+              <Button size="sm" variant="outline" className="gap-2 w-full sm:w-auto">
+                <Trophy className="w-4 h-4" />
+                View Full Rankings
               </Button>
             </div>
             
             <div className="relative">
+              <div className="absolute inset-0 bg-gradient-hero rounded-2xl blur-3xl opacity-20"></div>
               <img 
                 src={leaderboardImage} 
                 alt="Community leaderboard" 
-                className="rounded-2xl shadow-medium w-full animate-float"
+                className="relative rounded-2xl shadow-strong w-full"
               />
-              <div className="absolute -top-4 -left-4 bg-card p-4 rounded-xl shadow-medium">
-                <div className="flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-warning" />
-                  <span className="font-semibold">Monthly Winner!</span>
+              <div className="absolute -top-3 -right-3 bg-gradient-hero p-3 rounded-xl shadow-medium">
+                <div className="flex items-center gap-2 text-white">
+                  <Trophy className="w-5 h-5" />
+                  <span className="font-bold text-sm">Win Prizes!</span>
                 </div>
               </div>
             </div>
@@ -365,42 +419,42 @@ const Index = () => {
       </section>
 
       {/* Community Feed Preview */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">
+          <div className="text-center mb-12">
+            <Badge className="mb-3 bg-gradient-success text-white border-0 shadow-medium px-4 py-1.5">
               Community Feed
             </Badge>
-            <h3 className="text-4xl font-bold mb-4">
+            <h3 className="text-3xl font-bold mb-3">
               Share Your Impact
             </h3>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Inspire others and get inspired by sharing photos and stories from your eco-adventures.
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+              Upload proof of your eco-actions and inspire others in the community.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
             {[1, 2, 3].map((i) => (
-              <Card key={i} className="overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
-                <div className="aspect-square bg-gradient-to-br from-green-500 to-green-300 relative">
+              <Card key={i} className="overflow-hidden shadow-soft hover:shadow-medium transition-all duration-300 border-border/50">
+                <div className="aspect-square bg-gradient-success relative">
                   <div className="absolute inset-0 flex items-center justify-center text-white">
-                    <Camera className="w-16 h-16" />
+                    <Camera className="w-12 h-12 opacity-60" />
                   </div>
-                  <div className="absolute bottom-4 left-4">
-                    <Badge className="bg-white/90 text-green-700 border-0 font-semibold">
-                      +{5 + i * 2} points
+                  <div className="absolute top-3 right-3">
+                    <Badge className="bg-white/95 text-primary border-0 font-bold shadow-sm text-xs">
+                      +{5 + i * 2} pts
                     </Badge>
                   </div>
                 </div>
-                <CardContent className="p-4 bg-white">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Avatar className="w-8 h-8 bg-primary text-white">
-                      <AvatarFallback>U{i}</AvatarFallback>
+                <CardContent className="p-3 bg-card">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Avatar className="w-7 h-7 bg-gradient-hero">
+                      <AvatarFallback className="text-white text-xs font-bold">U{i}</AvatarFallback>
                     </Avatar>
-                    <span className="font-semibold text-foreground">EcoChampion{i}</span>
+                    <span className="font-semibold text-sm text-foreground">GreenChamp{i}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Just completed the recycling challenge! 🌱
+                  <p className="text-xs text-muted-foreground">
+                    Completed {['recycling', 'tree planting', 'beach cleanup'][i-1]} challenge! 🌱
                   </p>
                 </CardContent>
               </Card>
@@ -410,28 +464,28 @@ const Index = () => {
       </section>
 
       {/* Sponsors & Rewards */}
-      <section className="py-20">
+      <section className="py-16 bg-card">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-warning/10 text-warning border-warning/20">
-              Monthly Rewards
+          <div className="text-center mb-12">
+            <Badge className="mb-3 bg-warning/10 text-warning border-warning/20 px-4 py-1.5">
+              🎁 Monthly Rewards
             </Badge>
-            <h3 className="text-4xl font-bold mb-4">
+            <h3 className="text-3xl font-bold mb-3">
               Amazing Prizes Await
             </h3>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Our incredible sponsors support the community with fantastic rewards for top performers every month.
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+              Top Green Champions win eco-friendly prizes from our sustainability partners.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
             {sponsors.map((sponsor) => (
-              <Card key={sponsor.name} className="text-center p-8 shadow-md hover:shadow-lg transition-all duration-300 bg-white border">
-                <div className="text-6xl mb-4">{sponsor.logo}</div>
-                <h4 className="text-2xl font-bold mb-2 text-foreground">{sponsor.name}</h4>
-                <p className="text-muted-foreground mb-4">{sponsor.reward}</p>
-                <Badge className="bg-green-100 text-green-700 border-green-200 font-semibold">
-                  Partner Sponsor
+              <Card key={sponsor.name} className="text-center p-6 shadow-soft hover:shadow-medium transition-all duration-300 bg-card border-border/50">
+                <div className="text-5xl mb-3">{sponsor.logo}</div>
+                <h4 className="text-lg font-bold mb-2 text-foreground">{sponsor.name}</h4>
+                <p className="text-sm text-muted-foreground mb-3">{sponsor.reward}</p>
+                <Badge className="bg-gradient-success/10 text-primary border-primary/20 font-semibold">
+                  Sustainability Partner
                 </Badge>
               </Card>
             ))}
@@ -440,39 +494,42 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-green-600 via-green-500 to-cyan-500">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+      <section className="py-16 bg-gradient-hero relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
+        </div>
+        <div className="container mx-auto px-4 text-center relative">
+          <h3 className="text-3xl lg:text-4xl font-bold text-white mb-4">
             Ready to Make a Difference?
           </h3>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of Green Champions making positive environmental impact through community-based sustainability challenges.
+          <p className="text-base text-white/90 mb-6 max-w-2xl mx-auto">
+            Join thousands of Green Champions making environmental impact through community sustainability challenges.
           </p>
-          <Button size="lg" className="bg-white text-green-700 hover:bg-white/90 text-lg px-12 py-6" onClick={handleStartJourney}>
+          <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-base px-10 shadow-strong" onClick={handleStartJourney}>
             <Leaf className="w-5 h-5 mr-2" />
             {user ? 'View My Activities' : 'Get Started'}
           </Button>
-          <p className="text-white/80 mt-4 text-sm">
-            Available on iOS and Android • Free to join
+          <p className="text-white/75 mt-3 text-sm">
+            Free to join • Available in the UAE
           </p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-card border-t border-border/50">
+      <footer className="py-8 bg-card border-t border-border/50">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="flex items-center gap-3 mb-4 md:mb-0">
-              <img src={ecoIcon} alt="GreenSpark" className="w-8 h-8 rounded" />
-              <span className="text-lg font-semibold">GreenSpark</span>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <img src={ecoIcon} alt="GreenSpark" className="w-7 h-7 rounded" />
+              <span className="text-base font-semibold">GreenSpark</span>
             </div>
-            <div className="flex items-center gap-6 text-muted-foreground">
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <a href="#" className="hover:text-primary transition-colors">About</a>
               <a href="#" className="hover:text-primary transition-colors">Privacy</a>
               <a href="#" className="hover:text-primary transition-colors">Contact</a>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-border/30 text-center text-muted-foreground">
+          <div className="mt-6 pt-6 border-t border-border/30 text-center text-sm text-muted-foreground">
             <p>&copy; 2024 GreenSpark. Making the world greener, one spark at a time.</p>
           </div>
         </div>
