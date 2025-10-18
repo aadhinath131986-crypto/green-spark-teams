@@ -70,7 +70,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       console.log('[AuthModal] Sign in successful')
       toast({
         title: 'Welcome back!',
-        description: 'Successfully signed in to GreenPoints',
+        description: 'Successfully signed in to GreenSpark',
       })
       onClose()
     }
@@ -105,7 +105,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       })
     } else {
       toast({
-        title: 'Welcome to GreenPoints!',
+        title: 'Welcome to GreenSpark!',
         description: 'Please check your email to verify your account',
       })
       onClose()
@@ -157,7 +157,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-center">
             <Leaf className="w-5 h-5 text-primary" />
-            {showPasswordReset ? 'Reset Password' : 'Join GreenPoints'}
+            {showPasswordReset ? 'Reset Password' : 'Join GreenSpark'}
           </DialogTitle>
           <DialogDescription>
             {showPasswordReset 

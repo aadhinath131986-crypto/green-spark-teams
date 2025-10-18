@@ -188,7 +188,7 @@ const Index = () => {
             <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
               <Leaf className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-primary">GreenPoints</h1>
+            <h1 className="text-2xl font-bold text-primary">GreenSpark</h1>
           </div>
           <div className="flex items-center gap-3">
             {user ? (
@@ -234,11 +234,11 @@ const Index = () => {
             </Badge>
             <h2 className="text-5xl lg:text-6xl font-bold text-foreground mb-6">
               Turn Eco-Actions into
-              <span className="text-primary"> Real Rewards</span>
+              <span className="text-primary"> Green Champions</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join thousands of eco-warriors making a difference. Complete weekly challenges,
-              earn points, and compete for amazing prizes while saving our planet.
+              Join our community-driven sustainability movement. Complete weekly eco-challenges,
+              earn GreenPoints, and compete to become a Green Champion while making real environmental impact.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -446,7 +446,7 @@ const Index = () => {
             Ready to Make a Difference?
           </h3>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of eco-champions making positive environmental impact one challenge at a time.
+            Join thousands of Green Champions making positive environmental impact through community-based sustainability challenges.
           </p>
           <Button size="lg" className="bg-white text-green-700 hover:bg-white/90 text-lg px-12 py-6" onClick={handleStartJourney}>
             <Leaf className="w-5 h-5 mr-2" />
@@ -463,8 +463,8 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center gap-3 mb-4 md:mb-0">
-              <img src={ecoIcon} alt="GreenPoints" className="w-8 h-8 rounded" />
-              <span className="text-lg font-semibold">GreenPoints</span>
+              <img src={ecoIcon} alt="GreenSpark" className="w-8 h-8 rounded" />
+              <span className="text-lg font-semibold">GreenSpark</span>
             </div>
             <div className="flex items-center gap-6 text-muted-foreground">
               <a href="#" className="hover:text-primary transition-colors">About</a>
@@ -473,7 +473,7 @@ const Index = () => {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-border/30 text-center text-muted-foreground">
-            <p>&copy; 2024 GreenPoints. Making the world greener, one point at a time.</p>
+            <p>&copy; 2024 GreenSpark. Making the world greener, one spark at a time.</p>
           </div>
         </div>
       </footer>
