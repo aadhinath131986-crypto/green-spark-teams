@@ -2,7 +2,7 @@
 
 ## 🎯 App Overview
 
-Create **GreenSpark**, a community-driven sustainability platform for the UAE that gamifies eco-friendly actions through weekly challenges, points, and leaderboards. Users complete real-world environmental tasks, upload proof, earn GreenPoints, and compete to become Green Champions.
+Create **GreenSpark**, a community-driven sustainability platform for the UAE that transforms environmental cleanup into a competitive, high-reward, geo-localized adventure. Users complete real-world environmental tasks, upload proof, earn GreenPoints through weekly challenges and geo-quests, and compete to become Green Champions. The platform features real-time impact tracking, streak systems, and AR rewards to drive sustained engagement.
 
 ---
 
@@ -256,7 +256,68 @@ CREATE TRIGGER update_user_activity_points
 
 ## ✨ Core Features
 
-### 1. Landing Page (/)
+### 1. Real-Time Impact Dashboard
+
+**Pollution Clock:**
+- Large, dynamic counter showing Total Kilograms of Waste Removed in real-time
+- Updates automatically as submissions are approved
+- Displayed prominently on landing page and dashboard
+- Shows community collective impact
+
+**Heat Map Visualization:**
+- Interactive map showing pollution density hotspots
+- Color-coded areas (red = high pollution, green = cleaned areas)
+- Displays user activity locations and cleanup progress
+- Updates in real-time as activities are completed
+- Click on areas to see detailed cleanup stats
+
+**Impact Story Generator:**
+- Personalized summary for each user showing their environmental impact
+- Auto-generates shareable graphics: "You removed the equivalent of 1,200 plastic straws"
+- Converts waste removal to relatable metrics (energy saved, CO2 offset, etc.)
+- One-click sharing to social media with pre-formatted posts
+
+### 2. Gamification System
+
+**Geo-Quests:**
+- Dynamic, location-based high-value challenges
+- Appear on the map as special markers with countdown timers
+- Target critical areas (e.g., "Electronic Waste near Al Barsha School")
+- Offer 10x Bonus Points and unique Digital Badges
+- Time-sensitive (24-48 hours) to create urgency
+- Examples:
+  - "Coastal Crusader" - Beach cleanup quest
+  - "Urban Guardian" - City center waste removal
+  - "Green Pioneer" - Park restoration mission
+
+**Daily Streak System:**
+- Complete daily eco-missions to build streak count
+- Point Multiplier increases with streak length
+- Day 1: 1x points
+- Day 7: 1.5x points
+- Day 30: 2x points
+- Day 100: 3x points
+- Visual streak counter with flame animation
+- Streak freeze tokens (earn by completing challenges)
+
+**Custom AR Trophies:**
+- Unlock AR trophies at major milestones (100kg, 500kg, 1000kg removed)
+- 3D digital trophies viewable in AR (place in real environment)
+- Trophies include:
+  - Bronze Guardian (100kg)
+  - Silver Champion (500kg)
+  - Gold Legend (1000kg)
+  - Platinum Hero (5000kg)
+- Record AR trophy placement and share video to social media
+- Trophy cabinet view showing all earned trophies
+
+**Rare Find System:**
+- Special badges for completing difficult or rare challenges
+- Limited-time badges that disappear after event ends
+- Collect-them-all mechanic to drive engagement
+- Display badge collection on profile with rarity indicators
+
+### 3. Landing Page (/)
 
 **Header:**
 - Sticky header with backdrop blur
@@ -272,14 +333,15 @@ CREATE TRIGGER update_user_activity_points
 - Badge: "🌍 Community-Driven Sustainability"
 
 **Weekly Activities Section:**
-- Grid of 6 challenge cards
+- Grid of 6+ challenge cards including regular and geo-quest challenges
 - Each card shows:
   - Challenge icon
   - Title and description
-  - Points reward badge
+  - Points reward badge (with multiplier if active streak)
   - Participant count
   - Time remaining
   - Difficulty level (Easy/Medium/Hard)
+  - Special "GEO-QUEST" badge for location-based high-value missions
   - "Submit Now" or "Join Challenge" button
 - Pre-defined challenges:
   1. **Project Evergreen** - Plant native trees (20 pts, Medium)
@@ -288,6 +350,11 @@ CREATE TRIGGER update_user_activity_points
   4. **Solar Switch Challenge** - Solar alternatives (25 pts, Hard)
   5. **Water Warrior** - Water conservation (15 pts, Medium)
   6. **Zero Waste Week** - 7-day waste-free (30 pts, Hard)
+- Geo-Quests (when active):
+  - Display on map with pulsing markers
+  - Show 10x bonus point indicator
+  - Time remaining countdown
+  - Distance from user location
 
 **Leaderboard Section:**
 - Title: "Become a Green Champion"
@@ -371,13 +438,17 @@ CREATE TRIGGER update_user_activity_points
 - Insert into general_submissions table
 - Success notification
 
-### 5. User Profile
+### 5. User Profile & Dashboard
 
 **Profile Popover:**
 - Avatar (if set)
 - Username, email
-- Total points display
+- Total points display with current streak multiplier
+- Active streak count with flame icon
 - "My Activities" section showing recent submissions with status
+- Personal impact stats (kg removed, CO2 offset)
+- "My Trophies" button to view AR trophy cabinet
+- "Generate Impact Story" button
 - "Edit Profile" button (future feature)
 - "Sign Out" button
 
@@ -385,6 +456,19 @@ CREATE TRIGGER update_user_activity_points
 - Fetch user data from profiles table
 - Display user activities with status badges
 - Real-time points updates
+- Track and display daily streak count
+- Show unlocked AR trophies
+- Personal heat map of user's cleanup locations
+
+**Impact Story Generator:**
+- Generate personalized infographic showing:
+  - Total waste removed (kg)
+  - Equivalent items (plastic bottles, bags, etc.)
+  - Environmental impact (CO2 saved, energy equivalent)
+  - Days active and streak record
+  - Badges and trophies earned
+- Download as image or share directly to social media
+- Pre-formatted captions for Instagram, Twitter, Facebook
 
 ### 6. Admin Dashboard (/admin)
 
@@ -426,20 +510,29 @@ CREATE TRIGGER update_user_activity_points
 **Data Source:**
 - Query leaderboard_profiles view
 - Order by points DESC
-- Limit to top 10
+- Track monthly and all-time leaderboards
+- Separate leaderboards: Individual, Team, Weekly, Monthly, All-Time
 
 **Display:**
 - Show top 5 on home page
-- Full leaderboard accessible via button
+- Full leaderboard accessible via button with tabs for different time periods
 - Each entry shows:
-  - Rank number
+  - Rank number with medal icons for top 3
   - Avatar
   - Username or team name
-  - Points with progress bar
-  - Special styling for top 3
+  - Points with animated progress bar
+  - Current streak count
+  - Special styling for top 3 (gold, silver, bronze gradients)
+  - Rare badges earned
+
+**Monthly Reset:**
+- Leaderboard resets monthly for fresh competition
+- Previous month's top 3 get special "Monthly Champion" badges
+- All-time leaderboard preserved separately
 
 **Updates:**
-- Refresh after activity approval
+- Real-time updates using Supabase realtime subscriptions
+- Animated point changes when positions shift
 - Show default data if database empty
 
 ---
@@ -582,16 +675,18 @@ CREATE TRIGGER update_user_activity_points
 - Add default leaderboard entries for testing
 
 **Future Enhancements:**
-- Social sharing features
-- Team competitions
-- Monthly challenges reset
-- Push notifications
-- Achievement badges
-- Community forum
+- Push notifications for geo-quest spawns
+- Team vs team geo-quest battles
+- Live heat map updates with WebSocket
+- Advanced AR trophy animations
+- Voice-activated photo submissions
+- AI-powered waste type identification
+- Mass estimation from photos
 - Ecosolutions innovation challenge section
 - Integration with local authorities
 - Sponsor dashboard
-- Advanced analytics
+- Municipality data exports
+- Carbon credit calculations
 
 **Documentation:**
 - User guide for participants
