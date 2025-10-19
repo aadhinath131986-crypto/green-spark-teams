@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Leaf, Users, Trophy, Camera, Star, Recycle, TreePine, Heart, User, Upload, Shield } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Leaf, Users, Trophy, Camera, Star, Recycle, TreePine, Heart, User, Upload, Shield, Flame } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,6 +13,11 @@ import { AuthModal } from "@/components/AuthModal";
 import { UserProfile } from "@/components/UserProfile";
 import { ActivitySubmission } from "@/components/ActivitySubmission";
 import { GeneralSubmission } from "@/components/GeneralSubmission";
+import { PollutionClock } from "@/components/PollutionClock";
+import { StreakDisplay } from "@/components/StreakDisplay";
+import { TrophyCabinet } from "@/components/TrophyCabinet";
+import { ImpactStoryGenerator } from "@/components/ImpactStoryGenerator";
+import { GeoQuestCard } from "@/components/GeoQuestCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import heroImage from "@/assets/hero-image.jpg";
@@ -30,6 +36,7 @@ const Index = () => {
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [geoQuests, setGeoQuests] = useState<any[]>([]);
 
   const weeklyActivities = [
     {
@@ -94,9 +101,10 @@ const Index = () => {
     }
   ];
 
-  // Fetch leaderboard data
+  // Fetch leaderboard data and geo-quests
   useEffect(() => {
     fetchLeaderboard();
+    fetchGeoQuests();
   }, []);
 
   // Fetch user profile and check admin status when authenticated
@@ -161,6 +169,23 @@ const Index = () => {
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
+    }
+  };
+
+  const fetchGeoQuests = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('geo_quests')
+        .select('*')
+        .eq('active', true)
+        .gt('ends_at', new Date().toISOString())
+        .order('created_at', { ascending: false });
+
+      if (data) {
+        setGeoQuests(data);
+      }
+    } catch (error) {
+      console.error('Error fetching geo-quests:', error);
     }
   };
 
@@ -238,6 +263,11 @@ const Index = () => {
                     <span className="hidden sm:inline">Admin</span>
                   </Button>
                 )}
+                <StreakDisplay 
+                  currentStreak={userProfile?.current_streak || 0}
+                  longestStreak={userProfile?.longest_streak || 0}
+                  className="hidden md:flex"
+                />
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-success text-white font-semibold shadow-medium">
                   <Star className="w-4 h-4" />
                   <span className="text-sm">{userProfile?.points || 0}</span>
@@ -300,6 +330,56 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Pollution Clock - Real-Time Impact */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <PollutionClock />
+          </div>
+        </div>
+      </section>
+
+      {/* Geo-Quests Section */}
+      {geoQuests.length > 0 && (
+        <section className="py-16 bg-warning/5 border-y-2 border-warning/20">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <Badge className="mb-3 bg-gradient-to-r from-warning to-orange-500 text-white border-0 shadow-medium px-4 py-1.5 animate-pulse">
+                ⚡ LIVE GEO-QUESTS
+              </Badge>
+              <h3 className="text-3xl font-bold text-foreground mb-3">
+                High-Reward Location Challenges
+              </h3>
+              <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+                Limited-time, location-based missions offering 10x bonus points and exclusive badges!
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+              {geoQuests.map((quest) => (
+                <GeoQuestCard
+                  key={quest.id}
+                  title={quest.title}
+                  description={quest.description}
+                  locationName={quest.location_name}
+                  pointsMultiplier={quest.points_multiplier}
+                  badgeName={quest.badge_name}
+                  icon={quest.icon}
+                  endsAt={quest.ends_at}
+                  onJoin={() => handleJoinChallenge({
+                    id: quest.id,
+                    title: quest.title,
+                    description: quest.description,
+                    points: 100 * quest.points_multiplier,
+                    icon: quest.icon
+                  })}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Weekly Activities */}
       <section id="activities" className="py-16 bg-muted/50">

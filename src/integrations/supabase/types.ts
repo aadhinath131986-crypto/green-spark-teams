@@ -50,6 +50,39 @@ export type Database = {
         }
         Relationships: []
       }
+      ar_trophies: {
+        Row: {
+          ar_model_url: string | null
+          created_at: string | null
+          description: string
+          icon: string
+          id: string
+          name: string
+          required_kg: number
+          tier: string
+        }
+        Insert: {
+          ar_model_url?: string | null
+          created_at?: string | null
+          description: string
+          icon: string
+          id?: string
+          name: string
+          required_kg: number
+          tier: string
+        }
+        Update: {
+          ar_model_url?: string | null
+          created_at?: string | null
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          required_kg?: number
+          tier?: string
+        }
+        Relationships: []
+      }
       general_submissions: {
         Row: {
           email: string | null
@@ -89,34 +122,145 @@ export type Database = {
         }
         Relationships: []
       }
+      geo_quests: {
+        Row: {
+          active: boolean | null
+          badge_name: string
+          created_at: string | null
+          description: string
+          ends_at: string
+          icon: string
+          id: string
+          location_lat: number
+          location_lng: number
+          location_name: string
+          points_multiplier: number | null
+          starts_at: string
+          title: string
+        }
+        Insert: {
+          active?: boolean | null
+          badge_name: string
+          created_at?: string | null
+          description: string
+          ends_at: string
+          icon: string
+          id?: string
+          location_lat: number
+          location_lng: number
+          location_name: string
+          points_multiplier?: number | null
+          starts_at: string
+          title: string
+        }
+        Update: {
+          active?: boolean | null
+          badge_name?: string
+          created_at?: string | null
+          description?: string
+          ends_at?: string
+          icon?: string
+          id?: string
+          location_lat?: number
+          location_lng?: number
+          location_name?: string
+          points_multiplier?: number | null
+          starts_at?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      monthly_leaderboard_snapshots: {
+        Row: {
+          id: string
+          month: number
+          points: number
+          rank: number
+          snapshot_date: string | null
+          user_id: string
+          username: string
+          year: number
+        }
+        Insert: {
+          id?: string
+          month: number
+          points: number
+          rank: number
+          snapshot_date?: string | null
+          user_id: string
+          username: string
+          year: number
+        }
+        Update: {
+          id?: string
+          month?: number
+          points?: number
+          rank?: number
+          snapshot_date?: string | null
+          user_id?: string
+          username?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monthly_leaderboard_snapshots_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "leaderboard_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "monthly_leaderboard_snapshots_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string | null
+          current_streak: number | null
           email: string
           id: string
+          last_activity_date: string | null
+          longest_streak: number | null
           points: number | null
+          streak_freeze_tokens: number | null
           team_name: string | null
+          total_waste_kg: number | null
           updated_at: string | null
           username: string
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string | null
+          current_streak?: number | null
           email: string
           id: string
+          last_activity_date?: string | null
+          longest_streak?: number | null
           points?: number | null
+          streak_freeze_tokens?: number | null
           team_name?: string | null
+          total_waste_kg?: number | null
           updated_at?: string | null
           username: string
         }
         Update: {
           avatar_url?: string | null
           created_at?: string | null
+          current_streak?: number | null
           email?: string
           id?: string
+          last_activity_date?: string | null
+          longest_streak?: number | null
           points?: number | null
+          streak_freeze_tokens?: number | null
           team_name?: string | null
+          total_waste_kg?: number | null
           updated_at?: string | null
           username?: string
         }
@@ -126,6 +270,7 @@ export type Database = {
         Row: {
           activity_id: string | null
           description: string | null
+          estimated_kg: number | null
           id: string
           points_awarded: number | null
           proof_image_url: string | null
@@ -137,6 +282,7 @@ export type Database = {
         Insert: {
           activity_id?: string | null
           description?: string | null
+          estimated_kg?: number | null
           id?: string
           points_awarded?: number | null
           proof_image_url?: string | null
@@ -148,6 +294,7 @@ export type Database = {
         Update: {
           activity_id?: string | null
           description?: string | null
+          estimated_kg?: number | null
           id?: string
           points_awarded?: number | null
           proof_image_url?: string | null
@@ -200,6 +347,49 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_trophies: {
+        Row: {
+          id: string
+          trophy_id: string
+          unlocked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          trophy_id: string
+          unlocked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          trophy_id?: string
+          unlocked_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_trophies_trophy_id_fkey"
+            columns: ["trophy_id"]
+            isOneToOne: false
+            referencedRelation: "ar_trophies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_trophies_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "leaderboard_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_trophies_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

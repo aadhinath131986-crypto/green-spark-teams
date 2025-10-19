@@ -16,6 +16,7 @@ import { z } from 'zod'
 
 const activitySchema = z.object({
   description: z.string().max(500, 'Description must be under 500 characters').optional(),
+  estimatedKg: z.number().min(0.1, 'Weight must be at least 0.1 kg').max(1000, 'Weight must be under 1000 kg'),
   imageFile: z.instanceof(File)
     .refine(file => file.size <= 5 * 1024 * 1024, 'Image must be under 5MB')
     .refine(file => ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type), 'Invalid image type')
@@ -44,6 +45,7 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
 }) => {
   const [loading, setLoading] = useState(false)
   const [description, setDescription] = useState('')
+  const [estimatedKg, setEstimatedKg] = useState<string>('')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const { user } = useAuth()
@@ -132,7 +134,18 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
         return
       }
 
-      const result = activitySchema.safeParse({ description, imageFile })
+      const kgValue = parseFloat(estimatedKg)
+      if (!estimatedKg || isNaN(kgValue)) {
+        toast({
+          title: 'Validation Error',
+          description: 'Please enter the estimated weight of waste removed',
+          variant: 'destructive',
+        })
+        setLoading(false)
+        return
+      }
+
+      const result = activitySchema.safeParse({ description, estimatedKg: kgValue, imageFile })
       if (!result.success) {
         const firstError = result.error.errors[0]
         toast({
@@ -173,6 +186,7 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
             activity_id: activity.id,
             proof_image_url: imageUrl,
             description: description || null,
+            estimated_kg: parseFloat(estimatedKg),
             status: 'pending',
             points_awarded: 0,
             submitted_at: new Date().toISOString(),
@@ -202,6 +216,7 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
 
   const resetForm = () => {
     setDescription('')
+    setEstimatedKg('')
     setImageFile(null)
     setImagePreview(null)
   }
@@ -305,6 +320,25 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
                 />
               </div>
 
+              {/* Estimated Weight */}
+              <div className="space-y-2">
+                <Label htmlFor="estimatedKg">Estimated Waste Removed (kg) *</Label>
+                <Input
+                  id="estimatedKg"
+                  type="number"
+                  step="0.1"
+                  min="0.1"
+                  max="1000"
+                  placeholder="e.g., 5.5"
+                  value={estimatedKg}
+                  onChange={(e) => setEstimatedKg(e.target.value)}
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  Estimate the weight of waste you removed. This helps track community impact!
+                </p>
+              </div>
+
               {/* Submit Button */}
               <div className="flex gap-3 pt-4">
                 <Button 
@@ -318,7 +352,7 @@ export const ActivitySubmission: React.FC<ActivitySubmissionProps> = ({
                 </Button>
                 <Button 
                   type="submit" 
-                  disabled={loading || !imageFile}
+                  disabled={loading || !imageFile || !estimatedKg}
                   className="flex-1 gap-2"
                 >
                   {loading ? (

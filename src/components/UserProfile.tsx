@@ -3,9 +3,12 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Trophy, Star, LogOut } from 'lucide-react'
+import { Trophy, Star, LogOut, Flame } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/integrations/supabase/client'
+import { StreakDisplay } from './StreakDisplay'
+import { TrophyCabinet } from './TrophyCabinet'
+import { ImpactStoryGenerator } from './ImpactStoryGenerator'
 
 interface UserProfileProps {
   onClose?: () => void
@@ -18,6 +21,9 @@ interface Profile {
   points: number
   team_name: string | null
   avatar_url: string | null
+  current_streak: number
+  longest_streak: number
+  total_waste_kg: number
 }
 
 export const UserProfile: React.FC<UserProfileProps> = ({ onClose }) => {
@@ -99,16 +105,28 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onClose }) => {
         </div>
 
         {/* Points & Rank */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-3">
           <div className="flex items-center justify-center gap-2">
             <Star className="w-5 h-5 text-primary" />
             <span className="text-2xl font-bold text-primary">{profile.points}</span>
             <span className="text-muted-foreground">points</span>
           </div>
+          
+          <StreakDisplay 
+            currentStreak={profile.current_streak || 0}
+            longestStreak={profile.longest_streak || 0}
+            className="justify-center"
+          />
+          
           <Badge className="bg-primary/10 text-primary border-primary/20">
             <Trophy className="w-3 h-3 mr-1" />
             {getRank(profile.points)}
           </Badge>
+          
+          <div className="pt-2 border-t">
+            <p className="text-sm text-muted-foreground mb-1">Waste Removed</p>
+            <p className="text-2xl font-bold text-success">{profile.total_waste_kg?.toFixed(1) || 0} kg</p>
+          </div>
         </div>
 
         {/* Progress to Next Rank */}
@@ -127,6 +145,17 @@ export const UserProfile: React.FC<UserProfileProps> = ({ onClose }) => {
 
         {/* Actions */}
         <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-2">
+            <TrophyCabinet userId={profile.id} />
+            <ImpactStoryGenerator
+              totalWasteKg={profile.total_waste_kg || 0}
+              currentStreak={profile.current_streak || 0}
+              longestStreak={profile.longest_streak || 0}
+              points={profile.points}
+              username={profile.username}
+            />
+          </div>
+          
           <Button 
             variant="outline" 
             className="w-full gap-2"
